@@ -39,6 +39,16 @@ const videos = [
               style="background: radial-gradient(circle at 30% 15%, rgba(200,173,132,0.32), transparent 55%), linear-gradient(160deg, #24352f 0%, #1a2825 60%, #0f1815 100%);"
             />
 
+            <img
+              src={video.id ? `https://img.youtube.com/vi/${video.id}/maxresdefault.jpg` : "/images/imgcapa.png"}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover"
+              onerror={video.id ? `this.onerror=null;this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg';` : "this.remove();"}
+            />
+            <div class="pointer-events-none absolute inset-0 bg-primary-dark/25" />
+
             {video.id ? (
               <button
                 type="button"
