@@ -19,6 +19,7 @@ export default function Scene() {
       camera={{ position: [0, 0, 6.5], fov: 32 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true }}
+      frameloop="always"
     >
       <ambientLight intensity={0.7} color="#f8f4ec" />
       <spotLight

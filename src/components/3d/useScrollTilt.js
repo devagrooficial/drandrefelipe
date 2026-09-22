@@ -2,12 +2,12 @@ import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
 /**
- * Ref to drive a <group>: a slow continuous idle spin on Y, plus an
- * extra diagonal tilt (X + Y) driven by how far the page has scrolled —
- * so the model doesn't just spin in place, it visibly tumbles as the
- * hero scrolls past instead of only turning on one flat axis.
+ * Ref to drive a <group>: a continuous idle spin on Y, plus an extra
+ * diagonal tilt (X + Y) driven by how far the page has scrolled — so
+ * the model doesn't just spin in place, it visibly tumbles as the hero
+ * scrolls past instead of only turning on one flat axis.
  */
-export function useScrollTilt({ idleSpeed = 0.12, maxYaw = 1.4, maxPitch = 0.6 } = {}) {
+export function useScrollTilt({ idleSpeed = 0.35, maxYaw = 1.4, maxPitch = 0.6 } = {}) {
   const group = useRef(null);
   const idle = useRef(0);
 
