@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/ui/Header.astro";
+import WhatsAppButton from "../components/ui/WhatsAppButton.tsx";
+import Hero from "../components/sections/Hero.astro";
+import About from "../components/sections/About.astro";
+import VideoShorts from "../components/sections/VideoShorts.astro";
+import Treatments from "../components/sections/Treatments.astro";
+import Technology from "../components/sections/Technology.astro";
+import Footer from "../components/sections/Footer.astro";
+---
+
+<Layout>
+  <Header />
+  <main>
+    <Hero />
+    <About />
+    <VideoShorts />
+    <Treatments />
+    <Technology />
+  </main>
+  <Footer />
+  <WhatsAppButton client:load />
+</Layout>

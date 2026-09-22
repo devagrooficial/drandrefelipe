@@ -1,0 +1,148 @@
+---
+const technologies = [
+  {
+    title: "Ultrassom diagnóstico e guiado",
+    description:
+      "Diagnóstico preciso em tempo real e procedimentos guiados com segurança milimétrica.",
+    icon: "sonar",
+  },
+  {
+    title: "Medicina regenerativa (PRP, BMA e BMAC)",
+    description:
+      "Uso do potencial regenerativo do próprio paciente para acelerar a recuperação dos tecidos lesionados.",
+    icon: "droplet",
+  },
+  {
+    title: "Laser de alta potência",
+    description:
+      "Estímulo celular profundo para reduzir dor e inflamação ao longo do tratamento.",
+    icon: "beam",
+  },
+  {
+    title: "Ondas de choque (TOC)",
+    description:
+      "Terapia por ondas de choque para tendinopatias e lesões crônicas, estimulando a regeneração local.",
+    icon: "shockwave",
+  },
+];
+---
+
+<section
+  id="tecnologia"
+  data-tech-section
+  class="bg-primary-dark px-6 py-24 sm:px-10 lg:px-16 lg:py-32"
+>
+  <div class="mx-auto max-w-7xl lg:grid lg:grid-cols-12 lg:gap-12">
+    <div class="lg:col-span-5" data-tech-pin-wrap>
+      <div data-tech-pin>
+        <p class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-accent">
+          Tecnologia &amp; formação
+        </p>
+        <h2 class="text-balance font-serif text-3xl font-semibold text-cream sm:text-4xl">
+          Ciência atual a serviço da sua recuperação
+        </h2>
+        <p class="mt-6 max-w-md text-base leading-relaxed text-cream/65">
+          Investimento contínuo em equipamentos e técnicas que ampliam o
+          diagnóstico e abrem caminhos além da cirurgia.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-16 flex flex-col gap-6 lg:col-span-7 lg:mt-0">
+      {
+        technologies.map((tech) => (
+          <div
+            data-tech-item
+            data-reveal="up"
+            class="flex gap-5 rounded-2xl border border-cream/10 bg-cream/[0.04] p-7"
+          >
+            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/15 text-accent">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-6 w-6"
+                aria-hidden="true"
+              >
+                {tech.icon === "sonar" && (
+                  <>
+                    <circle cx="6" cy="18" r="1.3" fill="currentColor" stroke="none" />
+                    <path d="M6 18a6 6 0 0 1 6-6" />
+                    <path d="M6 18a10 10 0 0 1 10-10" />
+                    <path d="M6 18a14 14 0 0 1 14-14" opacity="0.5" />
+                  </>
+                )}
+                {tech.icon === "droplet" && (
+                  <path d="M12 3c3.5 4.2 6 7.7 6 10.5a6 6 0 1 1-12 0C6 10.7 8.5 7.2 12 3Z" />
+                )}
+                {tech.icon === "beam" && (
+                  <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" stroke-linejoin="round" />
+                )}
+                {tech.icon === "shockwave" && (
+                  <>
+                    <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+                    <circle cx="12" cy="12" r="5" />
+                    <circle cx="12" cy="12" r="9" opacity="0.5" />
+                  </>
+                )}
+              </svg>
+            </span>
+
+            <div>
+              <h3 class="font-serif text-lg font-semibold text-cream">
+                {tech.title}
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed text-cream/60">
+                {tech.description}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const section = document.querySelector<HTMLElement>("[data-tech-section]");
+  const pinTarget = document.querySelector<HTMLElement>("[data-tech-pin]");
+  const items = gsap.utils.toArray<HTMLElement>("[data-tech-item]");
+
+  items.forEach((el) => {
+    gsap.to(el, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: el,
+        start: "top 85%",
+      },
+    });
+  });
+
+  if (section && pinTarget) {
+    const mm = gsap.matchMedia();
+
+    // Pinning only makes sense once the two-column layout kicks in.
+    mm.add("(min-width: 1024px)", () => {
+      const pin = ScrollTrigger.create({
+        trigger: section,
+        start: "top top+=72",
+        end: "bottom bottom",
+        pin: pinTarget,
+        pinSpacing: false,
+      });
+
+      return () => pin.kill();
+    });
+  }
+</script>

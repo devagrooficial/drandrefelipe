@@ -1,0 +1,90 @@
+---
+import { DOCTOR_NAME, NAV_LINKS, WHATSAPP_URL } from "../../lib/contact";
+---
+
+<header
+  id="site-header"
+  data-header
+  class="fixed inset-x-0 top-0 z-50 transition-colors duration-300"
+>
+  <div
+    class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-12"
+  >
+    <a href="#top" class="brand shrink-0 font-serif font-semibold tracking-wide" aria-label={DOCTOR_NAME}>
+      <span class="text-lg md:hidden">AF</span>
+      <img
+        data-logo
+        src="/images/logo-reversed.png"
+        alt={DOCTOR_NAME}
+        class="hidden h-12 w-auto md:block"
+      />
+    </a>
+
+    <nav class="hidden items-center gap-8 md:flex">
+      {
+        NAV_LINKS.map((link) => (
+          <a href={link.href} class="nav-link text-sm font-medium">
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <a
+      href={WHATSAPP_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="shrink-0 rounded-full bg-accent px-4 py-2 text-xs font-semibold whitespace-nowrap text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light sm:px-5 sm:py-2.5 sm:text-sm"
+    >
+      Agendar avaliação
+    </a>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const logo = document.querySelector<HTMLImageElement>("[data-logo]");
+
+  // Warm the cache for the swapped-in variant so the scroll transition never pops in late.
+  new Image().src = "/images/logo-transparent.png";
+
+  if (header) {
+    const updateHeaderState = () => {
+      const scrolled = window.scrollY > 40;
+      header.classList.toggle("is-scrolled", scrolled);
+      if (logo) {
+        const nextSrc = scrolled ? "/images/logo-transparent.png" : "/images/logo-reversed.png";
+        if (!logo.src.endsWith(nextSrc)) logo.src = nextSrc;
+      }
+    };
+
+    updateHeaderState();
+    window.addEventListener("scroll", updateHeaderState, { passive: true });
+  }
+</script>
+
+<style>
+  [data-header] {
+    background-color: transparent;
+  }
+
+  [data-header].is-scrolled {
+    background-color: var(--color-cream);
+    box-shadow: 0 1px 0 0 rgb(26 40 37 / 0.08);
+  }
+
+  .brand,
+  .nav-link {
+    color: var(--color-cream);
+    transition: color 0.3s ease;
+  }
+
+  .is-scrolled .brand,
+  .is-scrolled .nav-link {
+    color: var(--color-primary);
+  }
+
+  .nav-link:hover {
+    color: var(--color-accent);
+  }
+</style>

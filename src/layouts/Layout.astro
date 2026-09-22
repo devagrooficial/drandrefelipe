@@ -1,0 +1,78 @@
+---
+import "../styles/global.css";
+import { DOCTOR_NAME, WHATSAPP_DISPLAY } from "../lib/contact";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${DOCTOR_NAME} | Ortopedista e Traumatologista em Cuiabá`,
+  description = "Ortopedia e traumatologia com foco em medicina regenerativa em Cuiabá. Tratamento humanizado para dor crônica, lesões articulares e limitações de movimento.",
+} = Astro.props;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Physician",
+  name: DOCTOR_NAME,
+  medicalSpecialty: ["Orthopedic", "SportsMedicine"],
+  description,
+  telephone: WHATSAPP_DISPLAY,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Av. Rússia, 302 - Santa Rosa",
+    addressLocality: "Cuiabá",
+    addressRegion: "MT",
+    addressCountry: "BR",
+  },
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#1A2825" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <meta name="geo.placename" content="Cuiabá" />
+    <meta name="geo.region" content="BR-MT" />
+    <meta name="author" content={DOCTOR_NAME} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+  </head>
+  <body class="bg-cream text-primary antialiased">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-cream);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 999px;
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+import Scene from "../3d/Scene.jsx";
+import { WHATSAPP_URL } from "../../lib/contact";
+---
+
+<section
+  id="top"
+  class="relative grid min-h-screen grid-cols-1 overflow-hidden bg-primary lg:grid-cols-2"
+>
+  <!-- Left: copy -->
+  <div
+    class="relative z-10 flex flex-col justify-center px-6 pt-32 pb-16 sm:px-10 lg:px-16 lg:pt-24"
+  >
+    <p
+      data-reveal="hero"
+      class="mb-6 text-sm font-semibold tracking-[0.25em] text-accent uppercase"
+    >
+      Ortopedia &amp; Medicina Regenerativa
+    </p>
+
+    <h1
+      data-reveal="hero"
+      class="text-balance font-serif text-4xl font-semibold leading-[1.1] text-cream sm:text-5xl lg:text-6xl"
+    >
+      Voltar a se mover sem dor é possível.
+    </h1>
+
+    <p data-reveal="hero" class="mt-6 max-w-xl text-lg leading-relaxed text-cream/75">
+      Em Cuiabá, o Dr. André Felipe Moura cuida de quem convive com dor
+      crônica, lesões articulares e limitações de movimento — com um olhar
+      técnico, atualizado e profundamente humano sobre cada caso.
+    </p>
+
+    <div data-reveal="hero" class="mt-10 flex flex-wrap items-center gap-4">
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="rounded-full bg-accent px-8 py-4 text-sm font-semibold tracking-wide text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light"
+      >
+        Agendar avaliação
+      </a>
+      <a
+        href="#tratamentos"
+        class="rounded-full border border-cream/25 px-8 py-4 text-sm font-semibold text-cream/90 transition-colors hover:border-accent hover:text-accent"
+      >
+        Conhecer tratamentos
+      </a>
+    </div>
+  </div>
+
+  <!-- Right: 3D stage -->
+  <div class="hero-canvas relative h-[60vh] lg:h-auto">
+    <div
+      class="pointer-events-none absolute inset-0"
+      style="background: radial-gradient(circle at 55% 45%, rgba(200,173,132,0.22), transparent 60%);"
+    >
+    </div>
+    <Scene client:load />
+  </div>
+
+  <!-- Scroll cue -->
+  <div
+    class="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-cream/50 lg:flex"
+  >
+    <span class="text-[11px] tracking-[0.3em] uppercase">Explorar</span>
+    <span class="scroll-cue h-9 w-px bg-cream/40"></span>
+  </div>
+</section>
+
+<script>
+  import gsap from "gsap";
+
+  gsap.to("[data-reveal='hero']", {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    ease: "power3.out",
+    stagger: 0.15,
+    delay: 0.3,
+  });
+</script>
+
+<!-- R3F/react-use-measure can fail to size the <canvas> itself on first
+     mount in some WebKit builds (the ResizeObserver measurement never
+     lands), leaving it at the intrinsic 300x150 default. Force it to
+     fill its already-correctly-sized wrapper via plain CSS so the
+     visual result never depends on that measurement succeeding. -->
+<style is:global>
+  .hero-canvas canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+  }
+</style>
+
+<style>
+  .scroll-cue {
+    animation: scroll-cue 1.8s ease-in-out infinite;
+    transform-origin: top;
+  }
+
+  @keyframes scroll-cue {
+    0% {
+      transform: scaleY(0);
+      opacity: 0;
+    }
+    40% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleY(0);
+      opacity: 0;
+      transform-origin: bottom;
+    }
+  }
+</style>

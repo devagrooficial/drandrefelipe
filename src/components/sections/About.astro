@@ -1,0 +1,89 @@
+---
+const stats = [
+  { value: "10+", label: "anos de prática" },
+  { value: "100%", label: "atendimento humanizado" },
+  { value: "Cuiabá", label: "referência regional" },
+];
+---
+
+<section id="sobre" class="bg-cream px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
+  <div class="mx-auto grid max-w-7xl grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-8">
+    <!-- Photo, offset gold frame behind it -->
+    <div class="relative lg:col-span-5">
+      <div
+        aria-hidden="true"
+        class="absolute -right-5 -top-5 h-full w-full rounded-2xl bg-accent/35 lg:-right-6 lg:-top-6"
+      >
+      </div>
+      <div
+        data-reveal="up"
+        class="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-primary shadow-xl shadow-primary/10"
+      >
+        <img
+          src="/images/dr-andre-felipe.jpg"
+          alt="Dr. André Felipe Moura, ortopedista e traumatologista"
+          class="h-full w-full object-cover"
+          loading="lazy"
+          onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+        />
+        <div
+          class="hidden h-full w-full flex-col items-center justify-center gap-3 text-cream/60"
+        >
+          <span class="font-serif text-6xl text-accent">AF</span>
+          <span class="text-xs uppercase tracking-[0.2em]">Foto oficial</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copy -->
+    <div class="flex flex-col justify-center lg:col-span-6 lg:col-start-7 lg:-mt-8">
+      <p data-reveal="up" class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-accent-dark">
+        Quem cuida de você
+      </p>
+
+      <h2 data-reveal="up" class="text-balance font-serif text-3xl font-semibold leading-tight text-primary sm:text-4xl lg:text-5xl">
+        Cuiabano, médico por vocação — ortopedista por convicção.
+      </h2>
+
+      <p data-reveal="up" class="mt-6 max-w-xl text-base leading-relaxed text-primary/70">
+        Uma trajetória construída em Cuiabá, dedicada a devolver qualidade
+        de vida através de um cuidado técnico e atualizado, sem perder a
+        proximidade e a escuta que cada paciente merece.
+      </p>
+
+      <dl data-reveal="up" class="mt-12 flex flex-wrap gap-x-10 gap-y-6 border-t border-primary/10 pt-8">
+        {
+          stats.map((stat) => (
+            <div class="min-w-[7rem]">
+              <dt class="font-serif text-3xl font-semibold text-accent-dark sm:text-4xl">
+                {stat.value}
+              </dt>
+              <dd class="mt-1 text-xs uppercase tracking-[0.15em] text-primary/60">
+                {stat.label}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to("#sobre [data-reveal='up']", {
+    opacity: 1,
+    y: 0,
+    duration: 0.9,
+    ease: "power3.out",
+    stagger: 0.12,
+    scrollTrigger: {
+      trigger: "#sobre",
+      start: "top 75%",
+    },
+  });
+</script>

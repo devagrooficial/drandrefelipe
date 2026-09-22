@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@import "@fontsource/playfair-display/500.css";
+@import "@fontsource/playfair-display/600.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+
+@theme {
+  --color-primary: #1a2825;
+  --color-primary-light: #24352f;
+  --color-primary-dark: #0f1815;
+  --color-accent: #c8ad84;
+  --color-accent-light: #ddc9a8;
+  --color-accent-dark: #ab8b5c;
+  --color-cream: #f8f4ec;
+  --color-cream-dark: #efe6d4;
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-primary);
+  font-family: var(--font-sans);
+}
+
+/* Progressive-enhancement hook: only hide [data-reveal] content when JS
+   actually runs, so animations never eat content on no-JS/slow clients. */
+.js [data-reveal] {
+  opacity: 0;
+}
+
+.js [data-reveal="up"],
+.js [data-reveal="hero"] {
+  transform: translateY(28px);
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-primary-dark);
+}
+
+.text-balance {
+  text-wrap: balance;
+}

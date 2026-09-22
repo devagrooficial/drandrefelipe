@@ -1,0 +1,27 @@
+---
+interface Props {
+  muted?: boolean;
+}
+
+const { muted = false } = Astro.props;
+---
+
+<span
+  class:list={[
+    "flex h-16 w-16 items-center justify-center rounded-full ring-1 backdrop-blur-sm transition-transform",
+    muted
+      ? "bg-cream/5 ring-cream/15"
+      : "bg-cream/10 ring-cream/25 group-hover:scale-110 group-hover:bg-accent/90",
+  ]}
+>
+  <svg
+    viewBox="0 0 24 24"
+    class:list={[
+      "h-6 w-6 translate-x-0.5",
+      muted ? "fill-cream/40" : "fill-cream transition-colors group-hover:fill-primary-dark",
+    ]}
+    aria-hidden="true"
+  >
+    <path d="M8 5v14l11-7z"></path>
+  </svg>
+</span>
