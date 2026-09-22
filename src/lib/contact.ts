@@ -15,6 +15,7 @@ export const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encod
 
 export const NAV_LINKS = [
   { label: "Sobre", href: "#sobre" },
+  { label: "Clínica", href: "#clinica" },
   { label: "Vídeos", href: "#conteudo" },
   { label: "Tratamentos", href: "#tratamentos" },
   { label: "Tecnologia", href: "#tecnologia" },

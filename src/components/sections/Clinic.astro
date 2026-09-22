@@ -1,0 +1,77 @@
+---
+const photos = [
+  { src: "/images/clinica-recepcao.jpg", alt: "Recepção da clínica", label: "Recepção" },
+  { src: "/images/clinica-sala.jpg", alt: "Sala de procedimentos da clínica", label: "Sala de procedimentos" },
+];
+---
+
+<section id="clinica" class="bg-cream px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
+  <div class="mx-auto max-w-7xl">
+    <div class="max-w-2xl">
+      <p data-reveal="up" class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-accent-dark">
+        A clínica
+      </p>
+      <h2 data-reveal="up" class="text-balance font-serif text-3xl font-semibold leading-tight text-primary sm:text-4xl lg:text-5xl">
+        Estrutura pensada para o seu bem-estar, do início ao fim.
+      </h2>
+      <p data-reveal="up" class="mt-6 text-base leading-relaxed text-primary/70">
+        Ambientes silenciosos e privativos reúnem, em um só lugar, toda a
+        estrutura para consulta, diagnóstico por imagem e procedimentos de
+        medicina regenerativa — para que cada etapa do seu tratamento
+        aconteça com o mesmo cuidado.
+      </p>
+    </div>
+
+    <div data-reveal="up" class="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {
+        photos.map((photo) => (
+          <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-primary shadow-lg shadow-primary/10">
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              class="h-full w-full object-cover"
+              loading="lazy"
+              onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+            />
+            <div class="hidden h-full w-full flex-col items-center justify-center gap-3 text-cream/60">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-9 w-9 text-accent"
+                aria-hidden="true"
+              >
+                <path d="M3 21h18" />
+                <path d="M5 21V9.5L12 4l7 5.5V21" />
+                <path d="M9 21v-6h6v6" />
+              </svg>
+              <span class="text-xs uppercase tracking-[0.2em]">{photo.label}</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to("#clinica [data-reveal='up']", {
+    opacity: 1,
+    y: 0,
+    duration: 0.9,
+    ease: "power3.out",
+    stagger: 0.12,
+    scrollTrigger: {
+      trigger: "#clinica",
+      start: "top 75%",
+    },
+  });
+</script>
