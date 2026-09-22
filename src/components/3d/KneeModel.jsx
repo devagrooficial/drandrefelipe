@@ -1,83 +1,33 @@
-import { useEffect, useMemo, useRef } from "react";
-import { useThree } from "@react-three/fiber";
+import { Suspense, useMemo } from "react";
 import { useGLTF, Float } from "@react-three/drei";
 import * as THREE from "three";
+import { SkeletonUtils } from "three-stdlib";
 import { useScrollTilt } from "./useScrollTilt.js";
+import PlaceholderJoint from "./PlaceholderJoint.jsx";
 
 const MODEL_PATH = "/knee.glb";
-const FRAME_MARGIN = 1.3;
+
+// knee.glb's real bounding box, measured once with
+// `new THREE.Box3().setFromObject(scene)` in dev tools (~349 x 1364 x
+// 362 units, centered around y≈140). Hardcoded so there's no runtime
+// measurement to get wrong — see git history if this ever needs
+// re-deriving for a re-exported file at a different scale.
+const MODEL_CENTER = new THREE.Vector3(-2, 140, -63);
+const MODEL_SCALE = 0.0021;
 
 /**
- * Loads the anatomical knee model and gives it a slow, idle presence:
- * a gentle vertical float, plus a diagonal tumble tied to page scroll.
- *
- * knee.glb ships at whatever scale/origin it was exported with (this one
- * measures ~1360 units tall), so on mount we measure its real bounding
- * box once, re-center it at the origin, and push the camera back just
- * far enough to frame it — instead of hand-tuned numbers that would
- * silently break on a re-export.
- *
- * This component can be mounted more than once on the same page (hero +
- * technology section). drei caches useGLTF by URL and hands back the
- * SAME scene graph object to every caller, and Object3D.add() reparents
- * on insert — so without cloning, the second mount would silently steal
- * the model out of the first one's scene.
+ * Idle float + scroll-tilt for the loaded model. Split out from
+ * KneeModel on purpose: useFrame (inside useScrollTilt) must not live
+ * in the same component as useGLTF. useGLTF suspends while /knee.glb
+ * streams in, and React only renders as far as the suspend point — so
+ * a component calling both hooks ran them in a different order on the
+ * first (aborted) render vs. the retry after the asset resolved,
+ * which corrupted React's hook bookkeeping for that fiber. Nesting
+ * this component below the suspending hook means its hooks only ever
+ * run once useGLTF has already resolved.
  */
-export default function KneeModel(props) {
+function KneeMesh({ scene, ...props }) {
   const group = useScrollTilt();
-  const { scene: cachedScene } = useGLTF(MODEL_PATH);
-  const scene = useMemo(() => cachedScene.clone(true), [cachedScene]);
-  const { camera } = useThree();
-  const didFit = useRef(false);
-
-  useEffect(() => {
-    if (didFit.current) return;
-
-    let rafId;
-
-    // The clone's meshes can take a frame or two to report real geometry
-    // bounds (draco/texture post-processing tailing off after useGLTF's
-    // suspense already resolved). Fitting against a still-empty box would
-    // put the camera almost on top of the origin — the model then fills
-    // (and overflows) the frame instead of being centered in it. Retry
-    // until the box is non-trivial, or give up after ~1s and fall back
-    // to a safe distance instead of trusting a near-zero measurement.
-    const tryFit = (attempt) => {
-      const box = new THREE.Box3().setFromObject(scene);
-      const size = new THREE.Vector3();
-      box.getSize(size);
-      const maxDimension = Math.max(size.x, size.y, size.z);
-
-      if (maxDimension < 1e-3 && attempt < 60) {
-        rafId = requestAnimationFrame(() => tryFit(attempt + 1));
-        return;
-      }
-
-      didFit.current = true;
-
-      const center = new THREE.Vector3();
-      box.getCenter(center);
-      scene.position.sub(center);
-
-      const safeDimension = maxDimension < 1e-3 ? 1 : maxDimension;
-      const fovRadians = (camera.fov * Math.PI) / 180;
-      const distance = Math.max(
-        (safeDimension / 2 / Math.tan(fovRadians / 2)) * FRAME_MARGIN,
-        1,
-      );
-
-      camera.position.set(0, 0, distance);
-      camera.near = distance / 100;
-      camera.far = distance * 100;
-      camera.updateProjectionMatrix();
-    };
-
-    tryFit(0);
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [scene, camera]);
 
   return (
     <Float speed={1.4} rotationIntensity={0.3} floatIntensity={0.7}>
@@ -85,6 +35,34 @@ export default function KneeModel(props) {
         <primitive object={scene} />
       </group>
     </Float>
+  );
+}
+
+function LoadedKnee(props) {
+  const { scene: cachedScene } = useGLTF(MODEL_PATH);
+
+  const scene = useMemo(() => {
+    // Plain Object3D.clone() does not re-link a SkinnedMesh's skeleton
+    // to the cloned bones — it silently keeps pointing at the
+    // originals, which corrupts every skinned vertex's position. This
+    // model is rigged (Armature/bones drive the mesh), and that bug is
+    // exactly what was rendering as a giant, shapeless blob no matter
+    // what scale or position was applied afterward. SkeletonUtils.clone
+    // is the three.js-recommended way to deep-clone a skinned model.
+    const clone = SkeletonUtils.clone(cachedScene);
+    clone.scale.setScalar(MODEL_SCALE);
+    clone.position.copy(MODEL_CENTER).multiplyScalar(-MODEL_SCALE);
+    return clone;
+  }, [cachedScene]);
+
+  return <KneeMesh scene={scene} {...props} />;
+}
+
+export default function KneeModel(props) {
+  return (
+    <Suspense fallback={<PlaceholderJoint scale={1.1} />}>
+      <LoadedKnee {...props} />
+    </Suspense>
   );
 }
 
