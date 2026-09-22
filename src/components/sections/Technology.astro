@@ -1,4 +1,6 @@
 ---
+import Scene from "../3d/Scene.jsx";
+
 const technologies = [
   {
     title: "Ultrassom diagnóstico e guiado",
@@ -45,6 +47,10 @@ const technologies = [
           Investimento contínuo em equipamentos e técnicas que ampliam o
           diagnóstico e abrem caminhos além da cirurgia.
         </p>
+
+        <div class="tech-3d-stage relative mt-10 hidden h-80 lg:block lg:h-[22rem]">
+          <Scene client:visible />
+        </div>
       </div>
     </div>
 
@@ -106,6 +112,14 @@ const technologies = [
   </div>
 </section>
 
+<style is:global>
+  .tech-3d-stage canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+  }
+</style>
+
 <script>
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -139,7 +153,6 @@ const technologies = [
         start: "top top+=72",
         end: "bottom bottom",
         pin: pinTarget,
-        pinSpacing: false,
       });
 
       return () => pin.kill();

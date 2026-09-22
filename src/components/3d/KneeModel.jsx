@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import { useGLTF, Float } from "@react-three/drei";
 import * as THREE from "three";
@@ -16,10 +16,17 @@ const FRAME_MARGIN = 1.3;
  * box once, re-center it at the origin, and push the camera back just
  * far enough to frame it — instead of hand-tuned numbers that would
  * silently break on a re-export.
+ *
+ * This component can be mounted more than once on the same page (hero +
+ * technology section). drei caches useGLTF by URL and hands back the
+ * SAME scene graph object to every caller, and Object3D.add() reparents
+ * on insert — so without cloning, the second mount would silently steal
+ * the model out of the first one's scene.
  */
 export default function KneeModel(props) {
   const group = useScrollTilt();
-  const { scene } = useGLTF(MODEL_PATH);
+  const { scene: cachedScene } = useGLTF(MODEL_PATH);
+  const scene = useMemo(() => cachedScene.clone(true), [cachedScene]);
   const { camera } = useThree();
   const didFit = useRef(false);
 
