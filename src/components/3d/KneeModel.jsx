@@ -32,24 +32,51 @@ export default function KneeModel(props) {
 
   useEffect(() => {
     if (didFit.current) return;
-    didFit.current = true;
 
-    const box = new THREE.Box3().setFromObject(scene);
-    const size = new THREE.Vector3();
-    box.getSize(size);
-    const center = new THREE.Vector3();
-    box.getCenter(center);
+    let rafId;
 
-    scene.position.sub(center);
+    // The clone's meshes can take a frame or two to report real geometry
+    // bounds (draco/texture post-processing tailing off after useGLTF's
+    // suspense already resolved). Fitting against a still-empty box would
+    // put the camera almost on top of the origin — the model then fills
+    // (and overflows) the frame instead of being centered in it. Retry
+    // until the box is non-trivial, or give up after ~1s and fall back
+    // to a safe distance instead of trusting a near-zero measurement.
+    const tryFit = (attempt) => {
+      const box = new THREE.Box3().setFromObject(scene);
+      const size = new THREE.Vector3();
+      box.getSize(size);
+      const maxDimension = Math.max(size.x, size.y, size.z);
 
-    const maxDimension = Math.max(size.x, size.y, size.z) || 1;
-    const fovRadians = (camera.fov * Math.PI) / 180;
-    const distance = (maxDimension / 2 / Math.tan(fovRadians / 2)) * FRAME_MARGIN;
+      if (maxDimension < 1e-3 && attempt < 60) {
+        rafId = requestAnimationFrame(() => tryFit(attempt + 1));
+        return;
+      }
 
-    camera.position.set(0, 0, distance);
-    camera.near = distance / 100;
-    camera.far = distance * 100;
-    camera.updateProjectionMatrix();
+      didFit.current = true;
+
+      const center = new THREE.Vector3();
+      box.getCenter(center);
+      scene.position.sub(center);
+
+      const safeDimension = maxDimension < 1e-3 ? 1 : maxDimension;
+      const fovRadians = (camera.fov * Math.PI) / 180;
+      const distance = Math.max(
+        (safeDimension / 2 / Math.tan(fovRadians / 2)) * FRAME_MARGIN,
+        1,
+      );
+
+      camera.position.set(0, 0, distance);
+      camera.near = distance / 100;
+      camera.far = distance * 100;
+      camera.updateProjectionMatrix();
+    };
+
+    tryFit(0);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, [scene, camera]);
 
   return (
