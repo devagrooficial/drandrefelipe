@@ -1,19 +1,12 @@
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
+import { useScrollTilt } from "./useScrollTilt.js";
 
 /**
  * Abstract stand-in for the knee model, shown while /knee.glb streams in
  * and as a permanent fallback if the asset is missing or fails to load.
  */
 export default function PlaceholderJoint(props) {
-  const group = useRef(null);
-
-  useFrame((_state, delta) => {
-    if (group.current) {
-      group.current.rotation.y += delta * 0.15;
-    }
-  });
+  const group = useScrollTilt();
 
   return (
     <Float speed={1.4} rotationIntensity={0.3} floatIntensity={0.7}>
