@@ -2,9 +2,9 @@
 import { WHATSAPP_URL } from "../../lib/contact";
 ---
 
-<section id="top" data-scroll-video-container class="relative h-[400vh] bg-primary">
-  <div class="sticky top-0 h-screen overflow-hidden">
-    <div class="mx-auto grid h-full max-w-7xl grid-cols-1 lg:grid-cols-2">
+<section id="top" data-scroll-video-container class="relative bg-primary lg:h-[400vh]">
+  <div class="lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden">
+    <div class="mx-auto grid max-w-7xl grid-cols-1 lg:h-full lg:grid-cols-2">
       <!-- Left: copy -->
       <div
         class="relative z-10 flex flex-col justify-center px-6 pt-32 pb-16 sm:px-10 lg:px-12 lg:pt-24"
@@ -48,15 +48,30 @@ import { WHATSAPP_URL } from "../../lib/contact";
       </div>
 
       <!-- Right: scroll-scrubbed video (progressão da artrose no joelho) -->
-      <div class="relative h-[60vh] overflow-hidden lg:h-auto">
+      <div data-scroll-video-trigger class="relative h-[60vh] overflow-hidden lg:h-auto">
         <video
           data-scroll-video
-          src="/images/video3D.webm"
           muted
           playsinline
           preload="auto"
           class="h-full w-full object-cover"
-        ></video>
+        >
+          <source src="/images/video3D.mp4" type="video/mp4" />
+        </video>
+
+        <!-- Blend seam so the video reads as part of the same scene as the
+             text panel instead of a hard-edged second color block: fades
+             from the panel's own background into the video. Direction
+             flips with the layout — top edge when stacked on mobile,
+             left edge once the two columns sit side by side. -->
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-primary to-transparent lg:hidden"
+        ></div>
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-y-0 left-0 hidden w-32 bg-gradient-to-r from-primary to-transparent lg:block"
+        ></div>
       </div>
     </div>
 
@@ -84,12 +99,21 @@ import { WHATSAPP_URL } from "../../lib/contact";
 </script>
 
 <!-- Scroll-bound video (Apple product-page technique): the video never
-     autoplays — currentTime is driven strictly by scroll progress
-     through the tall container above, via GSAP ScrollTrigger. The
-     sticky wrapper (h-screen, no JS pinning needed) holds the frame in
-     place for that container's extra height; scrub math waits for
-     loadedmetadata so `duration` is real before ScrollTrigger touches
-     currentTime, avoiding a jump/stutter on first scroll. -->
+     autoplays — currentTime is driven strictly by scroll progress. Scrub
+     math waits for the loadedmetadata event so `duration` is real before
+     ScrollTrigger touches currentTime, avoiding a jump/stutter on first
+     scroll.
+
+     Desktop (lg+) pins the video in a sticky viewport-height box while a
+     tall 400vh container scrolls behind it, exactly like an Apple
+     product page. That pin math needs the video's own column to be
+     ~60vh tall AND the copy column to fit in the same 100vh box — on
+     phone-sized viewports the copy alone can already exceed 100vh, which
+     would clip most of the video under the pin's overflow-hidden. So
+     below lg, there's no pin at all: the section is normal height, and
+     the video scrubs against its own position as it scrolls through the
+     viewport like any other element — still driven by scroll, just not
+     held in place first. -->
 <script>
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -97,20 +121,45 @@ import { WHATSAPP_URL } from "../../lib/contact";
   gsap.registerPlugin(ScrollTrigger);
 
   const container = document.querySelector<HTMLElement>("[data-scroll-video-container]");
+  const videoTrigger = document.querySelector<HTMLElement>("[data-scroll-video-trigger]");
   const video = document.querySelector<HTMLVideoElement>("[data-scroll-video]");
 
   function initScrollVideo() {
-    if (!container || !video) return;
+    if (!container || !videoTrigger || !video) return;
     if (!Number.isFinite(video.duration) || video.duration <= 0) return;
 
-    ScrollTrigger.create({
-      trigger: container,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: true,
-      onUpdate: (self) => {
-        video.currentTime = self.progress * video.duration;
-      },
+    const onUpdate = (self: ScrollTrigger) => {
+      video.currentTime = self.progress * video.duration;
+    };
+
+    // A small scrub value lets GSAP ease toward the scroll-derived
+    // progress instead of snapping to it on every event, absorbing
+    // jittery wheel/trackpad deltas. The jump-cut feel itself came from
+    // the source video having a keyframe roughly every 3.3s, so a seek
+    // between keyframes had to decode forward first — fixed by
+    // re-encoding with a keyframe every 2 frames.
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px)", () => {
+      const trigger = ScrollTrigger.create({
+        trigger: container,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.35,
+        onUpdate,
+      });
+      return () => trigger.kill();
+    });
+
+    mm.add("(max-width: 1023.98px)", () => {
+      const trigger = ScrollTrigger.create({
+        trigger: videoTrigger,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 0.35,
+        onUpdate,
+      });
+      return () => trigger.kill();
     });
   }
 
