@@ -1,72 +1,72 @@
 ---
-import Scene from "../3d/Scene.jsx";
 import { WHATSAPP_URL } from "../../lib/contact";
 ---
 
-<section
-  id="top"
-  class="relative overflow-hidden bg-primary"
->
-  <div class="mx-auto grid min-h-screen max-w-7xl grid-cols-1 lg:grid-cols-2">
-    <!-- Left: copy -->
-    <div
-      class="relative z-10 flex flex-col justify-center px-6 pt-32 pb-16 sm:px-10 lg:px-12 lg:pt-24"
-    >
-      <p
-        data-reveal="hero"
-        class="mb-6 text-sm font-semibold tracking-[0.25em] text-accent uppercase"
-      >
-        Ortopedia &amp; Medicina Regenerativa
-      </p>
-
-      <h1
-        data-reveal="hero"
-        class="text-balance font-serif text-4xl font-semibold leading-[1.1] text-cream sm:text-5xl lg:text-6xl"
-      >
-        Voltar a se mover sem dor é possível.
-      </h1>
-
-      <p data-reveal="hero" class="mt-6 max-w-xl text-lg leading-relaxed text-cream/75">
-        Em Cuiabá, o Dr. André Felipe Moura cuida de quem convive com dor
-        crônica, lesões articulares e limitações de movimento — com um olhar
-        técnico, atualizado e profundamente humano sobre cada caso.
-      </p>
-
-      <div data-reveal="hero" class="mt-10 flex flex-wrap items-center gap-4">
-        <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="rounded-full bg-accent px-8 py-4 text-sm font-semibold tracking-wide text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light"
-        >
-          Agendar avaliação
-        </a>
-        <a
-          href="#tratamentos"
-          class="rounded-full border border-cream/25 px-8 py-4 text-sm font-semibold text-cream/90 transition-colors hover:border-accent hover:text-accent"
-        >
-          Conhecer tratamentos
-        </a>
-      </div>
-    </div>
-
-    <!-- Right: 3D stage -->
-    <div class="hero-canvas relative h-[60vh] overflow-hidden lg:h-auto">
+<section id="top" data-scroll-video-container class="relative h-[400vh] bg-primary">
+  <div class="sticky top-0 h-screen overflow-hidden">
+    <div class="mx-auto grid h-full max-w-7xl grid-cols-1 lg:grid-cols-2">
+      <!-- Left: copy -->
       <div
-        class="pointer-events-none absolute inset-0"
-        style="background: radial-gradient(circle min(300px, 40vw) at 50% 40%, rgba(200,173,132,0.26), transparent);"
+        class="relative z-10 flex flex-col justify-center px-6 pt-32 pb-16 sm:px-10 lg:px-12 lg:pt-24"
       >
-      </div>
-      <Scene client:load />
-    </div>
-  </div>
+        <p
+          data-reveal="hero"
+          class="mb-6 text-sm font-semibold tracking-[0.25em] text-accent uppercase"
+        >
+          Ortopedia &amp; Medicina Regenerativa
+        </p>
 
-  <!-- Scroll cue -->
-  <div
-    class="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-cream/50 lg:flex"
-  >
-    <span class="text-[11px] tracking-[0.3em] uppercase">Explorar</span>
-    <span class="scroll-cue h-9 w-px bg-cream/40"></span>
+        <h1
+          data-reveal="hero"
+          class="text-balance font-serif text-4xl font-semibold leading-[1.1] text-cream sm:text-5xl lg:text-6xl"
+        >
+          Voltar a se mover sem dor é possível.
+        </h1>
+
+        <p data-reveal="hero" class="mt-6 max-w-xl text-lg leading-relaxed text-cream/75">
+          Em Cuiabá, o Dr. André Felipe Moura cuida de quem convive com dor
+          crônica, lesões articulares e limitações de movimento — com um olhar
+          técnico, atualizado e profundamente humano sobre cada caso.
+        </p>
+
+        <div data-reveal="hero" class="mt-10 flex flex-wrap items-center gap-4">
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rounded-full bg-accent px-8 py-4 text-sm font-semibold tracking-wide text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light"
+          >
+            Agendar avaliação
+          </a>
+          <a
+            href="#tratamentos"
+            class="rounded-full border border-cream/25 px-8 py-4 text-sm font-semibold text-cream/90 transition-colors hover:border-accent hover:text-accent"
+          >
+            Conhecer tratamentos
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: scroll-scrubbed video (progressão da artrose no joelho) -->
+      <div class="relative h-[60vh] overflow-hidden lg:h-auto">
+        <video
+          data-scroll-video
+          src="/images/video3D.webm"
+          muted
+          playsinline
+          preload="auto"
+          class="h-full w-full object-cover"
+        ></video>
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div
+      class="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-cream/50 lg:flex"
+    >
+      <span class="text-[11px] tracking-[0.3em] uppercase">Explorar</span>
+      <span class="scroll-cue h-9 w-px bg-cream/40"></span>
+    </div>
   </div>
 </section>
 
@@ -83,18 +83,45 @@ import { WHATSAPP_URL } from "../../lib/contact";
   });
 </script>
 
-<!-- R3F/react-use-measure can fail to size the <canvas> itself on first
-     mount in some WebKit builds (the ResizeObserver measurement never
-     lands), leaving it at the intrinsic 300x150 default. Force it to
-     fill its already-correctly-sized wrapper via plain CSS so the
-     visual result never depends on that measurement succeeding. -->
-<style is:global>
-  .hero-canvas canvas {
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
+<!-- Scroll-bound video (Apple product-page technique): the video never
+     autoplays — currentTime is driven strictly by scroll progress
+     through the tall container above, via GSAP ScrollTrigger. The
+     sticky wrapper (h-screen, no JS pinning needed) holds the frame in
+     place for that container's extra height; scrub math waits for
+     loadedmetadata so `duration` is real before ScrollTrigger touches
+     currentTime, avoiding a jump/stutter on first scroll. -->
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const container = document.querySelector<HTMLElement>("[data-scroll-video-container]");
+  const video = document.querySelector<HTMLVideoElement>("[data-scroll-video]");
+
+  function initScrollVideo() {
+    if (!container || !video) return;
+    if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+
+    ScrollTrigger.create({
+      trigger: container,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: true,
+      onUpdate: (self) => {
+        video.currentTime = self.progress * video.duration;
+      },
+    });
   }
-</style>
+
+  if (video) {
+    if (video.readyState >= 1) {
+      initScrollVideo();
+    } else {
+      video.addEventListener("loadedmetadata", initScrollVideo, { once: true });
+    }
+  }
+</script>
 
 <style>
   .scroll-cue {
