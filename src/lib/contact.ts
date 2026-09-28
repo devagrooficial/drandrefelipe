@@ -1,5 +1,5 @@
-export const WHATSAPP_NUMBER = "5565992002352";
-export const WHATSAPP_DISPLAY = "(65) 9 9200-2352";
+export const WHATSAPP_NUMBER = "5565999117723";
+export const WHATSAPP_DISPLAY = "(65) 9 9911-7723";
 export const WHATSAPP_MESSAGE = "Olá! Gostaria de agendar uma avaliação.";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   WHATSAPP_MESSAGE,
