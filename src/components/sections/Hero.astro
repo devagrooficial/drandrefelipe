@@ -54,6 +54,7 @@ import { WHATSAPP_URL } from "../../lib/contact";
           muted
           playsinline
           preload="auto"
+          poster="/images/video3D-poster.jpg"
           class="h-full w-full object-cover"
         >
           <source src="/images/video3D.mp4" type="video/mp4" />
@@ -170,6 +171,24 @@ import { WHATSAPP_URL } from "../../lib/contact";
   }
 
   if (video) {
+    // iOS Safari never paints a frame for a muted video that hasn't
+    // played at least once, even after currentTime is set via JS —
+    // priming with an immediate play/pause (allowed without a user
+    // gesture since the video is muted) forces it to decode and
+    // display a frame before any scrubbing happens. Without this the
+    // video column stayed blank on iPhone even though the poster,
+    // metadata and scroll math were all correct.
+    video.play().then(() => video.pause()).catch(() => {});
+
+    // A genuine load failure (bad network, unsupported codec on some
+    // older device) leaves nothing to scrub — collapse the block on
+    // mobile rather than leave a dead empty gap. The poster image
+    // already covers everything up to that point; desktop is left
+    // alone since it's already confirmed working there.
+    video.addEventListener("error", () => {
+      videoTrigger?.classList.add("hidden", "lg:block");
+    });
+
     if (video.readyState >= 1) {
       initScrollVideo();
     } else {
