@@ -59,18 +59,24 @@ import { WHATSAPP_URL } from "../../lib/contact";
           <source src="/images/video3D.mp4" type="video/mp4" />
         </video>
 
-        <!-- Blend seam so the video reads as part of the same scene as the
-             text panel instead of a hard-edged second color block: fades
-             from the panel's own background into the video. Direction
-             flips with the layout — top edge when stacked on mobile,
-             left edge once the two columns sit side by side. -->
+        <!-- Blend seams so the video reads as part of the same scene as the
+             text panel instead of a hard-edged color block: fades from the
+             panel's own background into the video. Stacked on mobile, only
+             the top edge (against the text above) needs it; side by side
+             on desktop, both left (against the text column) and right
+             (against the viewport edge) fade out so the video doesn't just
+             cut off flat on either side. -->
         <div
           aria-hidden="true"
           class="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-primary to-transparent lg:hidden"
         ></div>
         <div
           aria-hidden="true"
-          class="pointer-events-none absolute inset-y-0 left-0 hidden w-32 bg-gradient-to-r from-primary to-transparent lg:block"
+          class="pointer-events-none absolute inset-y-0 left-0 hidden w-48 bg-gradient-to-r from-primary to-transparent lg:block"
+        ></div>
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-y-0 right-0 hidden w-48 bg-gradient-to-l from-primary to-transparent lg:block"
         ></div>
       </div>
     </div>
