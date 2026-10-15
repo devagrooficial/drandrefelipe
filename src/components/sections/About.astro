@@ -1,9 +1,7 @@
 ---
-const stats = [
-  { value: "10+", label: "anos de prática" },
-  { value: "100%", label: "atendimento humanizado" },
-  { value: "Cuiabá", label: "referência regional" },
-];
+import { site } from "../../lib/content";
+
+const { eyebrow, title, text, image, stats } = site.about;
 ---
 
 <section id="sobre" class="bg-cream px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
@@ -20,8 +18,8 @@ const stats = [
         class="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-primary shadow-xl shadow-primary/10"
       >
         <img
-          src="/images/drandrefelipe.jpg"
-          alt="Dr. André Felipe Moura, ortopedista e traumatologista"
+          src={image.src}
+          alt={image.alt}
           class="h-full w-full object-cover object-top"
           loading="lazy"
           onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
@@ -38,17 +36,15 @@ const stats = [
     <!-- Copy -->
     <div class="flex flex-col justify-center lg:col-span-6 lg:col-start-7 lg:-mt-8">
       <p data-reveal="up" class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-accent-dark">
-        Quem cuida de você
+        {eyebrow}
       </p>
 
       <h2 data-reveal="up" class="text-balance font-serif text-3xl font-semibold leading-tight text-primary sm:text-4xl lg:text-5xl">
-        Cuiabano, médico por vocação — ortopedista por convicção.
+        {title}
       </h2>
 
       <p data-reveal="up" class="mt-6 max-w-xl text-base leading-relaxed text-primary/70">
-        Uma trajetória construída em Cuiabá, dedicada a devolver qualidade
-        de vida através de um cuidado técnico e atualizado, sem perder a
-        proximidade e a escuta que cada paciente merece.
+        {text}
       </p>
 
       <dl data-reveal="up" class="mt-12 flex flex-wrap gap-x-10 gap-y-6 border-t border-primary/10 pt-8">

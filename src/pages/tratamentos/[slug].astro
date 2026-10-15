@@ -4,7 +4,7 @@ import Header from "../../components/ui/Header.astro";
 import WhatsAppButton from "../../components/ui/WhatsAppButton.tsx";
 import Footer from "../../components/sections/Footer.astro";
 import TreatmentVideo from "../../components/treatments/TreatmentVideo.astro";
-import { DOCTOR_NAME, whatsappUrl } from "../../lib/contact";
+import { DOCTOR_NAME, WHATSAPP_URL, whatsappUrl } from "../../lib/contact";
 import { treatments, treatmentHref } from "../../lib/treatments";
 
 export function getStaticPaths() {
@@ -261,7 +261,7 @@ const ctaUrl = whatsappUrl(
   </main>
 
   <Footer />
-  <WhatsAppButton client:load />
+  <WhatsAppButton client:load href={WHATSAPP_URL} />
 </Layout>
 
 <script>

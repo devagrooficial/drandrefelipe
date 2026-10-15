@@ -1,32 +1,11 @@
 ---
 import Scene from "../3d/Scene.jsx";
+import { site } from "../../lib/content";
 
-const technologies = [
-  {
-    title: "Ultrassom diagnóstico e guiado",
-    description:
-      "Diagnóstico preciso em tempo real e procedimentos guiados com segurança milimétrica.",
-    icon: "sonar",
-  },
-  {
-    title: "Medicina regenerativa (PRP, BMA e BMAC)",
-    description:
-      "Uso do potencial regenerativo do próprio paciente para acelerar a recuperação dos tecidos lesionados.",
-    icon: "droplet",
-  },
-  {
-    title: "Laser de alta potência",
-    description:
-      "Estímulo celular profundo para reduzir dor e inflamação ao longo do tratamento.",
-    icon: "beam",
-  },
-  {
-    title: "Ondas de choque (TOC)",
-    description:
-      "Terapia por ondas de choque para tendinopatias e lesões crônicas, estimulando a regeneração local.",
-    icon: "shockwave",
-  },
-];
+const { eyebrow, title, text, items } = site.technology;
+// Icons stay tied to position; the admin edits only the texts of these 4 slots.
+const icons = ["sonar", "droplet", "beam", "shockwave"];
+const technologies = items.map((item, index) => ({ ...item, icon: icons[index] }));
 ---
 
 <section
@@ -38,14 +17,13 @@ const technologies = [
     <div class="lg:col-span-5" data-tech-pin-wrap>
       <div data-tech-pin>
         <p class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-accent">
-          Tecnologia &amp; formação
+          {eyebrow}
         </p>
         <h2 class="text-balance font-serif text-3xl font-semibold text-cream sm:text-4xl">
-          Ciência atual a serviço da sua recuperação
+          {title}
         </h2>
         <p class="mt-6 max-w-md text-base leading-relaxed text-cream/65">
-          Investimento contínuo em equipamentos e técnicas que ampliam o
-          diagnóstico e abrem caminhos além da cirurgia.
+          {text}
         </p>
 
         <div class="tech-3d-stage relative mt-10 hidden h-80 overflow-hidden lg:block lg:h-[22rem]">

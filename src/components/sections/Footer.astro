@@ -7,6 +7,7 @@ import {
   WHATSAPP_DISPLAY,
   WHATSAPP_URL,
 } from "../../lib/contact";
+import { site } from "../../lib/content";
 
 const year = new Date().getFullYear();
 ---
@@ -21,8 +22,7 @@ const year = new Date().getFullYear();
           class="h-20 w-auto"
         />
         <p class="mt-4 max-w-xs text-sm leading-relaxed text-cream/55">
-          Ortopedia e traumatologia com foco em medicina regenerativa —
-          cuidado técnico e humano em Cuiabá.
+          {site.footer.text}
         </p>
       </div>
 

@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
-import { WHATSAPP_URL } from "../../lib/contact";
 
-export default function WhatsAppButton() {
+export default function WhatsAppButton({ href }: { href: string }) {
   return (
     <motion.a
-      href={WHATSAPP_URL}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Conversar no WhatsApp"

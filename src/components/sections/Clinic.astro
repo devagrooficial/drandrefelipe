@@ -1,24 +1,20 @@
 ---
-const photos = [
-  { src: "/images/clinicadrandre1.jpg", alt: "Sala de procedimentos da clínica", label: "Sala de procedimentos" },
-  { src: "/images/clinicadrandre2.jpg", alt: "Outro ângulo da sala de procedimentos", label: "Sala de procedimentos" },
-];
+import { site } from "../../lib/content";
+
+const { eyebrow, title, text, photos } = site.clinic;
 ---
 
 <section id="clinica" class="bg-cream px-6 py-24 sm:px-10 lg:px-16 lg:py-32">
   <div class="mx-auto max-w-7xl">
     <div class="max-w-2xl">
       <p data-reveal="up" class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-accent-dark">
-        A clínica
+        {eyebrow}
       </p>
       <h2 data-reveal="up" class="text-balance font-serif text-3xl font-semibold leading-tight text-primary sm:text-4xl lg:text-5xl">
-        Estrutura pensada para o seu bem-estar, do início ao fim.
+        {title}
       </h2>
       <p data-reveal="up" class="mt-6 text-base leading-relaxed text-primary/70">
-        Ambientes silenciosos e privativos reúnem, em um só lugar, toda a
-        estrutura para consulta, diagnóstico por imagem e procedimentos de
-        medicina regenerativa — para que cada etapa do seu tratamento
-        aconteça com o mesmo cuidado.
+        {text}
       </p>
     </div>
 
@@ -48,7 +44,7 @@ const photos = [
                 <path d="M5 21V9.5L12 4l7 5.5V21" />
                 <path d="M9 21v-6h6v6" />
               </svg>
-              <span class="text-xs uppercase tracking-[0.2em]">{photo.label}</span>
+              <span class="text-xs uppercase tracking-[0.2em]">{eyebrow}</span>
             </div>
           </div>
         ))

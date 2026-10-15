@@ -1,5 +1,8 @@
 ---
 import { WHATSAPP_URL } from "../../lib/contact";
+import { site } from "../../lib/content";
+
+const { eyebrow, title, text, primaryCta, secondaryCta } = site.hero;
 ---
 
 <section id="top" data-scroll-video-container class="relative bg-primary lg:h-[400vh]">
@@ -13,20 +16,18 @@ import { WHATSAPP_URL } from "../../lib/contact";
           data-reveal="hero"
           class="mb-6 text-sm font-semibold tracking-[0.25em] text-accent uppercase"
         >
-          Ortopedia &amp; Medicina Regenerativa
+          {eyebrow}
         </p>
 
         <h1
           data-reveal="hero"
           class="text-balance font-serif text-4xl font-semibold leading-[1.1] text-cream sm:text-5xl lg:text-6xl"
         >
-          Voltar a se mover sem dor é possível.
+          {title}
         </h1>
 
         <p data-reveal="hero" class="mt-6 max-w-xl text-lg leading-relaxed text-cream/75">
-          Em Cuiabá, o Dr. André Felipe Moura cuida de quem convive com dor
-          crônica, lesões articulares e limitações de movimento — com um olhar
-          técnico, atualizado e profundamente humano sobre cada caso.
+          {text}
         </p>
 
         <div data-reveal="hero" class="mt-10 flex flex-wrap items-center gap-4">
@@ -36,13 +37,13 @@ import { WHATSAPP_URL } from "../../lib/contact";
             rel="noopener noreferrer"
             class="rounded-full bg-accent px-8 py-4 text-sm font-semibold tracking-wide text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light"
           >
-            Agendar avaliação
+            {primaryCta}
           </a>
           <a
             href="#tratamentos"
             class="rounded-full border border-cream/25 px-8 py-4 text-sm font-semibold text-cream/90 transition-colors hover:border-accent hover:text-accent"
           >
-            Conhecer tratamentos
+            {secondaryCta}
           </a>
         </div>
       </div>

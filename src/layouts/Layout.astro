@@ -1,16 +1,14 @@
 ---
 import "../styles/global.css";
-import { DOCTOR_NAME, WHATSAPP_DISPLAY } from "../lib/contact";
+import { ADDRESS_LINE, DOCTOR_NAME, WHATSAPP_DISPLAY } from "../lib/contact";
+import { site } from "../lib/content";
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const {
-  title = `${DOCTOR_NAME} | Ortopedista e Traumatologista em Cuiabá`,
-  description = "Ortopedia e traumatologia com foco em medicina regenerativa em Cuiabá. Tratamento humanizado para dor crônica, lesões articulares e limitações de movimento.",
-} = Astro.props;
+const { title = site.seo.title, description = site.seo.description } = Astro.props;
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -21,7 +19,7 @@ const jsonLd = {
   telephone: WHATSAPP_DISPLAY,
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Av. Rússia, 302 - Santa Rosa",
+    streetAddress: ADDRESS_LINE,
     addressLocality: "Cuiabá",
     addressRegion: "MT",
     addressCountry: "BR",

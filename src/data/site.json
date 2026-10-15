@@ -1,0 +1,142 @@
+{
+  "seo": {
+    "title": "Dr. André Felipe Moura | Ortopedista e Traumatologista em Cuiabá",
+    "description": "Ortopedia e traumatologia com foco em medicina regenerativa em Cuiabá. Tratamento humanizado para dor crônica, lesões articulares e limitações de movimento."
+  },
+  "contact": {
+    "whatsappNumber": "5565999117723",
+    "whatsappDisplay": "(65) 9 9911-7723",
+    "whatsappMessage": "Olá! Gostaria de agendar uma avaliação.",
+    "addressLine": "Av. Rússia, 302 - Santa Rosa",
+    "addressCity": "Cuiabá - MT"
+  },
+  "hero": {
+    "eyebrow": "Ortopedia & Medicina Regenerativa",
+    "title": "Voltar a se mover sem dor é possível.",
+    "text": "Em Cuiabá, o Dr. André Felipe Moura cuida de quem convive com dor crônica, lesões articulares e limitações de movimento — com um olhar técnico, atualizado e profundamente humano sobre cada caso.",
+    "primaryCta": "Agendar avaliação",
+    "secondaryCta": "Conhecer tratamentos"
+  },
+  "about": {
+    "eyebrow": "Quem cuida de você",
+    "title": "Cuiabano, médico por vocação — ortopedista por convicção.",
+    "text": "Uma trajetória construída em Cuiabá, dedicada a devolver qualidade de vida através de um cuidado técnico e atualizado, sem perder a proximidade e a escuta que cada paciente merece.",
+    "image": {
+      "src": "/images/drandrefelipe.jpg",
+      "alt": "Dr. André Felipe Moura, ortopedista e traumatologista"
+    },
+    "stats": [
+      { "value": "10+", "label": "anos de prática" },
+      { "value": "100%", "label": "atendimento humanizado" },
+      { "value": "Cuiabá", "label": "referência regional" }
+    ]
+  },
+  "clinic": {
+    "eyebrow": "A clínica",
+    "title": "Estrutura pensada para o seu bem-estar, do início ao fim.",
+    "text": "Ambientes silenciosos e privativos reúnem, em um só lugar, toda a estrutura para consulta, diagnóstico por imagem e procedimentos de medicina regenerativa — para que cada etapa do seu tratamento aconteça com o mesmo cuidado.",
+    "photos": [
+      { "src": "/images/clinicadrandre1.jpg", "alt": "Sala de procedimentos da clínica" },
+      { "src": "/images/clinicadrandre2.jpg", "alt": "Outro ângulo da sala de procedimentos" }
+    ]
+  },
+  "videos": {
+    "eyebrow": "Conhecimento em foco",
+    "title": "Conteúdo em vídeo, direto ao ponto",
+    "text": "Explicações curtas do Dr. André sobre dor, diagnóstico e tratamento — para entender antes mesmo da consulta.",
+    "items": [
+      { "title": "Dor no joelho durante o treino", "youtubeId": "H857GbsiHVA" },
+      { "title": "O poder da medicina regenerativa", "youtubeId": "OgjC55HUY10" },
+      { "title": "Medicina regenerativa pode substituir a cirurgia?", "youtubeId": "wGq1r1rEicg" }
+    ]
+  },
+  "treatments": {
+    "eyebrow": "Soluções e tratamentos",
+    "title": "Cuidado específico para cada dor",
+    "text": "Diagnóstico preciso e condutas atualizadas — cirúrgicas quando necessário, regenerativas sempre que possível.",
+    "items": {
+      "dor-no-joelho": {
+        "title": "Dor no joelho",
+        "summary": "Artrose, lesões de menisco e ligamentos, dor ao treinar.",
+        "intro": "O joelho concentra boa parte das queixas ortopédicas — do desgaste da cartilagem às lesões do esporte. Nos vídeos abaixo, o Dr. André explica causas, sinais de alerta e os caminhos de tratamento, incluindo as opções regenerativas.",
+        "videos": [
+          {
+            "youtubeId": "H857GbsiHVA",
+            "title": "Dor no joelho durante o treino",
+            "description": "Sentir dor no joelho durante o treino não é algo para ignorar. Entenda quando esse sinal merece atenção e por que um diagnóstico cedo faz diferença na recuperação.",
+            "format": "vertical"
+          }
+        ]
+      },
+      "dor-no-quadril": {
+        "title": "Dor no quadril",
+        "summary": "Artrose, bursite e dor ao caminhar ou subir escadas.",
+        "intro": "Dor na virilha, na lateral do quadril ou ao levantar da cadeira pode ter origens diferentes — na articulação, nos tendões ou nas bursas. Aqui você entende cada uma delas e como o tratamento é conduzido.",
+        "videos": []
+      },
+      "dor-lombar-e-coluna": {
+        "title": "Dor lombar e coluna",
+        "summary": "Lombalgia, hérnia de disco e dor que irradia para as pernas.",
+        "intro": "A dor lombar é uma das queixas mais comuns no consultório e, muitas vezes, pode ser tratada sem cirurgia. Conheça as causas mais frequentes e quando é preciso investigar mais a fundo.",
+        "videos": []
+      },
+      "dor-no-ombro": {
+        "title": "Dor no ombro",
+        "summary": "Tendinites, lesões do manguito rotador e ombro travado.",
+        "intro": "Dor para levantar o braço, para dormir sobre o ombro ou para treinar costuma envolver os tendões do manguito rotador. Veja como o problema é identificado e quais tratamentos existem.",
+        "videos": []
+      },
+      "tornozelo-e-pe": {
+        "title": "Tornozelo e pé",
+        "summary": "Entorses, fascite plantar e dor no calcanhar.",
+        "intro": "Entorses que não cicatrizaram bem, dor no calcanhar ao acordar e sobrecarga nos pés afetam a rotina inteira. Entenda as causas e as opções de tratamento para voltar a pisar sem dor.",
+        "videos": []
+      },
+      "alternativas-a-cirurgia": {
+        "title": "Alternativas à cirurgia",
+        "summary": "Medicina regenerativa e terapias que podem evitar ou adiar a cirurgia.",
+        "intro": "Nem toda lesão precisa de cirurgia. A medicina regenerativa e as terapias guiadas por imagem usam o potencial do próprio corpo para tratar dor e lesões — sempre com indicação individualizada.",
+        "videos": [
+          {
+            "youtubeId": "OgjC55HUY10",
+            "title": "O poder da medicina regenerativa",
+            "description": "Como os tratamentos regenerativos usam recursos do próprio paciente para estimular a recuperação de tecidos lesionados.",
+            "format": "vertical"
+          },
+          {
+            "youtubeId": "wGq1r1rEicg",
+            "title": "Medicina regenerativa pode substituir a cirurgia?",
+            "description": "Quando a medicina regenerativa entra como alternativa à cirurgia — e como essa indicação é avaliada caso a caso.",
+            "format": "vertical"
+          }
+        ]
+      }
+    }
+  },
+  "technology": {
+    "eyebrow": "Tecnologia & formação",
+    "title": "Ciência atual a serviço da sua recuperação",
+    "text": "Investimento contínuo em equipamentos e técnicas que ampliam o diagnóstico e abrem caminhos além da cirurgia.",
+    "items": [
+      {
+        "title": "Ultrassom diagnóstico e guiado",
+        "description": "Diagnóstico preciso em tempo real e procedimentos guiados com segurança milimétrica."
+      },
+      {
+        "title": "Medicina regenerativa (PRP, BMA e BMAC)",
+        "description": "Uso do potencial regenerativo do próprio paciente para acelerar a recuperação dos tecidos lesionados."
+      },
+      {
+        "title": "Laser de alta potência",
+        "description": "Estímulo celular profundo para reduzir dor e inflamação ao longo do tratamento."
+      },
+      {
+        "title": "Ondas de choque (TOC)",
+        "description": "Terapia por ondas de choque para tendinopatias e lesões crônicas, estimulando a regeneração local."
+      }
+    ]
+  },
+  "footer": {
+    "text": "Ortopedia e traumatologia com foco em medicina regenerativa — cuidado técnico e humano em Cuiabá."
+  }
+}

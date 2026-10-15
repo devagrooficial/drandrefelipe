@@ -1,13 +1,17 @@
-export const WHATSAPP_NUMBER = "5565999117723";
-export const WHATSAPP_DISPLAY = "(65) 9 9911-7723";
-export const WHATSAPP_MESSAGE = "Olá! Gostaria de agendar uma avaliação.";
+import { site } from "./content";
+
+const { contact } = site;
+
+export const WHATSAPP_NUMBER = contact.whatsappNumber;
+export const WHATSAPP_DISPLAY = contact.whatsappDisplay;
+export const WHATSAPP_MESSAGE = contact.whatsappMessage;
 export const whatsappUrl = (message = WHATSAPP_MESSAGE) =>
   `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 export const WHATSAPP_URL = whatsappUrl();
 
 export const DOCTOR_NAME = "Dr. André Felipe Moura";
-export const ADDRESS_LINE = "Av. Rússia, 302 - Santa Rosa";
-export const ADDRESS_CITY = "Cuiabá - MT";
+export const ADDRESS_LINE = contact.addressLine;
+export const ADDRESS_CITY = contact.addressCity;
 export const FULL_ADDRESS = `${ADDRESS_LINE}, ${ADDRESS_CITY}`;
 export const MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
   FULL_ADDRESS,
