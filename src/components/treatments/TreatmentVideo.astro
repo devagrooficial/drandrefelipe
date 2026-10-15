@@ -1,0 +1,129 @@
+---
+import PlayGlyph from "../ui/PlayGlyph.astro";
+import { youtubeWatchUrl, type TreatmentVideo } from "../../lib/treatments";
+
+interface Props {
+  video: TreatmentVideo;
+  index: number;
+}
+
+const { video, index } = Astro.props;
+const number = String(index + 1).padStart(2, "0");
+const vertical = video.format === "vertical";
+const flipped = index % 2 === 1;
+const paragraphs = video.description
+  .split(/\n\s*\n/)
+  .map((paragraph) => paragraph.trim())
+  .filter(Boolean);
+---
+
+<article
+  id={`conteudo-${number}`}
+  data-reveal="up"
+  class="grid scroll-mt-32 grid-cols-1 items-center gap-10 py-16 lg:grid-cols-12 lg:gap-16 lg:py-24"
+>
+  <div
+    class:list={[
+      "flex justify-center",
+      vertical ? "lg:col-span-5" : "lg:col-span-7",
+      { "lg:order-2": flipped },
+    ]}
+  >
+    <div
+      data-yt-frame
+      class:list={[
+        "relative w-full overflow-hidden rounded-2xl bg-primary shadow-2xl shadow-primary/20 ring-1 ring-primary/10",
+        vertical ? "aspect-[9/16] max-w-[22rem]" : "aspect-video",
+      ]}
+    >
+      <img
+        src={`https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        class="absolute inset-0 h-full w-full object-cover"
+        onerror={`this.onerror=null;this.src='https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg';`}
+      />
+      <div
+        class="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-dark/75 via-primary-dark/15 to-transparent"
+      >
+      </div>
+
+      <button
+        type="button"
+        data-yt-trigger
+        data-yt-id={video.youtubeId}
+        data-yt-title={video.title}
+        aria-label={`Assistir: ${video.title}`}
+        class="group absolute inset-0 flex h-full w-full items-center justify-center"
+      >
+        <PlayGlyph />
+      </button>
+
+      <span
+        class="pointer-events-none absolute bottom-4 left-4 rounded-full bg-primary-dark/60 px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-cream/85 uppercase backdrop-blur-sm"
+      >
+        {vertical ? "Vídeo curto" : "Vídeo"}
+      </span>
+    </div>
+  </div>
+
+  <div class:list={[vertical ? "lg:col-span-7" : "lg:col-span-5", { "lg:order-1": flipped }]}>
+    <div class="flex items-center gap-4">
+      <span class="font-serif text-5xl leading-none font-semibold text-accent">{number}</span>
+      <span class="h-px w-16 bg-accent/50"></span>
+    </div>
+
+    <h3
+      class="mt-6 text-balance font-serif text-2xl leading-snug font-semibold text-primary sm:text-3xl lg:text-4xl"
+    >
+      {video.title}
+    </h3>
+
+    <div class="mt-5 max-w-xl space-y-4 text-base leading-relaxed text-primary/70">
+      {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+
+    <a
+      href={youtubeWatchUrl(video)}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group/yt mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent-dark transition-colors hover:text-primary"
+    >
+      Assistir no YouTube
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="h-4 w-4 transition-transform group-hover/yt:translate-x-0.5 group-hover/yt:-translate-y-0.5"
+        aria-hidden="true"
+      >
+        <path d="M7 17 17 7" />
+        <path d="M7 7h10v10" />
+      </svg>
+    </a>
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-yt-trigger]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const frame = button.closest<HTMLElement>("[data-yt-frame]");
+      const id = button.dataset.ytId;
+      if (!frame || !id) return;
+
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`;
+      iframe.title = button.dataset.ytTitle ?? "Vídeo";
+      iframe.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      iframe.className = "absolute inset-0 h-full w-full";
+      iframe.style.border = "0";
+      frame.replaceChildren(iframe);
+    });
+  });
+</script>

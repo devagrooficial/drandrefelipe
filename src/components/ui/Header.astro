@@ -1,5 +1,9 @@
 ---
 import { DOCTOR_NAME, NAV_LINKS, WHATSAPP_URL } from "../../lib/contact";
+import { treatments, treatmentHref } from "../../lib/treatments";
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
+const onTreatmentPage = currentPath.startsWith("/tratamentos/");
 ---
 
 <header
@@ -10,7 +14,7 @@ import { DOCTOR_NAME, NAV_LINKS, WHATSAPP_URL } from "../../lib/contact";
   <div
     class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-12"
   >
-    <a href="#top" class="brand shrink-0" aria-label={DOCTOR_NAME}>
+    <a href="/#top" class="brand shrink-0" aria-label={DOCTOR_NAME}>
       <img
         data-logo
         src="/images/logo-reversed.png"
@@ -21,11 +25,92 @@ import { DOCTOR_NAME, NAV_LINKS, WHATSAPP_URL } from "../../lib/contact";
 
     <nav class="hidden items-center gap-8 md:flex">
       {
-        NAV_LINKS.map((link) => (
-          <a href={link.href} class="nav-link text-sm font-medium">
-            {link.label}
-          </a>
-        ))
+        NAV_LINKS.map((link) =>
+          link.treatmentsMenu ? (
+            <div class="nav-dropdown relative" data-nav-dropdown>
+              <a
+                href={link.href}
+                aria-haspopup="true"
+                class:list={[
+                  "nav-link inline-flex items-center gap-1.5 text-sm font-medium",
+                  { "is-active": onTreatmentPage },
+                ]}
+              >
+                {link.label}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="nav-chevron h-3.5 w-3.5"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </a>
+
+              <div class="nav-dropdown-panel absolute left-1/2 top-full w-[38rem] pt-5">
+                <div class="overflow-hidden rounded-2xl border border-primary/10 bg-cream shadow-2xl shadow-primary/25">
+                  <ul class="grid grid-cols-2 gap-1 p-3">
+                    {treatments.map((treatment) => {
+                      const Icon = treatment.icon;
+                      const href = treatmentHref(treatment.slug);
+                      const active = currentPath === href;
+                      return (
+                        <li>
+                          <a
+                            href={href}
+                            aria-current={active ? "page" : undefined}
+                            class:list={[
+                              "group/item flex gap-4 rounded-xl p-3.5 transition-colors hover:bg-white",
+                              { "bg-white": active },
+                            ]}
+                          >
+                            <span
+                              class:list={[
+                                "flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors group-hover/item:bg-accent/15 group-hover/item:text-accent-dark",
+                                active ? "bg-accent/15 text-accent-dark" : "bg-primary/5 text-primary",
+                              ]}
+                            >
+                              <Icon className="h-5 w-5" strokeWidth={1.75} />
+                            </span>
+                            <span class="min-w-0">
+                              <span class="block font-serif text-[15px] font-semibold text-primary">
+                                {treatment.title}
+                              </span>
+                              <span class="mt-0.5 block text-xs leading-relaxed text-primary/60">
+                                {treatment.summary}
+                              </span>
+                            </span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  <div class="flex items-center justify-between gap-4 border-t border-primary/10 bg-cream-dark/60 px-6 py-3.5">
+                    <p class="text-xs text-primary/60">
+                      Vídeos e explicações do Dr. André sobre cada tema.
+                    </p>
+                    <a
+                      href={link.href}
+                      class="group/all inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold text-accent-dark transition-colors hover:text-primary"
+                    >
+                      Ver todos
+                      <span aria-hidden="true" class="transition-transform group-hover/all:translate-x-0.5">→</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <a href={link.href} class="nav-link text-sm font-medium">
+              {link.label}
+            </a>
+          ),
+        )
       }
     </nav>
 
@@ -60,6 +145,20 @@ import { DOCTOR_NAME, NAV_LINKS, WHATSAPP_URL } from "../../lib/contact";
     updateHeaderState();
     window.addEventListener("scroll", updateHeaderState, { passive: true });
   }
+
+  // The panel opens on :hover, so after a click (e.g. the same-page jump to
+  // #tratamentos) it would stay open under the still-hovering cursor.
+  document.querySelectorAll<HTMLElement>("[data-nav-dropdown]").forEach((dropdown) => {
+    dropdown.addEventListener("click", (event) => {
+      if ((event.target as Element).closest("a")) dropdown.classList.add("is-dismissed");
+    });
+    dropdown.addEventListener("mouseleave", () => dropdown.classList.remove("is-dismissed"));
+    dropdown.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    });
+  });
 </script>
 
 <style>
@@ -83,7 +182,45 @@ import { DOCTOR_NAME, NAV_LINKS, WHATSAPP_URL } from "../../lib/contact";
     color: var(--color-primary);
   }
 
-  .nav-link:hover {
+  .nav-link:hover,
+  .nav-link.is-active {
     color: var(--color-accent);
+  }
+
+  .is-scrolled .nav-link.is-active {
+    color: var(--color-accent-dark);
+  }
+
+  .nav-chevron {
+    transition: transform 0.3s ease;
+  }
+
+  .nav-dropdown-panel {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate(-50%, 0.5rem);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0.2s;
+  }
+
+  /* :focus-visible rather than :focus-within so a mouse click on the
+     trigger doesn't leave the panel pinned open by focus. */
+  .nav-dropdown:hover .nav-dropdown-panel,
+  .nav-dropdown:has(:focus-visible) .nav-dropdown-panel {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .nav-dropdown:hover .nav-chevron,
+  .nav-dropdown:has(:focus-visible) .nav-chevron {
+    transform: rotate(180deg);
+  }
+
+  .nav-dropdown.is-dismissed .nav-dropdown-panel {
+    visibility: hidden;
+    opacity: 0;
   }
 </style>

@@ -1,0 +1,291 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/ui/Header.astro";
+import WhatsAppButton from "../../components/ui/WhatsAppButton.tsx";
+import Footer from "../../components/sections/Footer.astro";
+import TreatmentVideo from "../../components/treatments/TreatmentVideo.astro";
+import { DOCTOR_NAME, whatsappUrl } from "../../lib/contact";
+import { treatments, treatmentHref } from "../../lib/treatments";
+
+export function getStaticPaths() {
+  return treatments.map(({ slug }) => ({ params: { slug } }));
+}
+
+const treatment = treatments.find((t) => t.slug === Astro.params.slug)!;
+const { title, intro, videos, icon: Icon } = treatment;
+const others = treatments.filter((t) => t.slug !== treatment.slug);
+const ctaUrl = whatsappUrl(
+  `Olá! Gostaria de agendar uma avaliação sobre ${title.toLowerCase()}.`,
+);
+---
+
+<Layout title={`${title} | ${DOCTOR_NAME} — Ortopedista em Cuiabá`} description={intro}>
+  <Header />
+
+  <main>
+    <section class="relative overflow-hidden bg-primary pt-40 pb-20 lg:pt-48 lg:pb-28">
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0"
+        style="background: radial-gradient(circle min(560px, 80vw) at 85% 20%, rgba(200,173,132,0.16), transparent 70%);"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute top-28 -right-16 hidden text-cream/[0.04] lg:block"
+      >
+        <Icon className="h-[28rem] w-[28rem]" strokeWidth={0.6} />
+      </div>
+
+      <div class="relative mx-auto max-w-7xl px-6 lg:px-12">
+        <nav aria-label="Você está em" data-reveal="hero" class="text-xs text-cream/50">
+          <ol class="flex flex-wrap items-center gap-2">
+            <li><a href="/" class="transition-colors hover:text-accent">Início</a></li>
+            <li aria-hidden="true">/</li>
+            <li>
+              <a href="/#tratamentos" class="transition-colors hover:text-accent">Tratamentos</a>
+            </li>
+            <li aria-hidden="true">/</li>
+            <li aria-current="page" class="text-cream/80">{title}</li>
+          </ol>
+        </nav>
+
+        <div class="mt-10 max-w-3xl">
+          <span
+            data-reveal="hero"
+            class="flex h-14 w-14 items-center justify-center rounded-full bg-accent/15 text-accent ring-1 ring-accent/25"
+          >
+            <Icon className="h-6 w-6" strokeWidth={1.75} />
+          </span>
+
+          <h1
+            data-reveal="hero"
+            class="mt-8 text-balance font-serif text-4xl leading-[1.1] font-semibold text-cream sm:text-5xl lg:text-6xl"
+          >
+            {title}
+          </h1>
+
+          <p data-reveal="hero" class="mt-6 max-w-2xl text-lg leading-relaxed text-cream/75">
+            {intro}
+          </p>
+
+          <div data-reveal="hero" class="mt-10 flex flex-wrap items-center gap-4">
+            <a
+              href={ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rounded-full bg-accent px-8 py-4 text-sm font-semibold tracking-wide text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light"
+            >
+              Agendar avaliação
+            </a>
+            {
+              videos.length > 0 && (
+                <a
+                  href="#conteudos"
+                  class="rounded-full border border-cream/25 px-8 py-4 text-sm font-semibold text-cream/90 transition-colors hover:border-accent hover:text-accent"
+                >
+                  {videos.length === 1 ? "Assistir ao vídeo" : `Assistir aos ${videos.length} vídeos`}
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="conteudos" class="scroll-mt-24 bg-cream py-24 lg:py-32">
+      <div class="mx-auto max-w-7xl px-6 lg:px-12">
+        <div
+          data-reveal="up"
+          class="flex flex-col gap-8 border-b border-primary/10 pb-10 lg:flex-row lg:items-end lg:justify-between"
+        >
+          <div class="max-w-xl">
+            <p class="mb-4 text-sm font-semibold tracking-[0.25em] text-accent-dark uppercase">
+              Conteúdos em vídeo
+            </p>
+            <h2 class="text-balance font-serif text-3xl font-semibold text-primary sm:text-4xl">
+              Entenda antes da consulta
+            </h2>
+          </div>
+
+          {
+            videos.length > 1 && (
+              <nav aria-label="Neste tema">
+                <ol class="flex flex-wrap gap-2 lg:justify-end">
+                  {videos.map((video, index) => {
+                    const number = String(index + 1).padStart(2, "0");
+                    return (
+                      <li>
+                        <a
+                          href={`#conteudo-${number}`}
+                          class="inline-flex max-w-[20rem] items-center gap-2 rounded-full border border-primary/15 bg-white/60 px-4 py-2 text-xs text-primary/75 transition-colors hover:border-accent hover:bg-white hover:text-primary"
+                        >
+                          <span class="font-semibold text-accent-dark">{number}</span>
+                          <span class="truncate">{video.title}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </nav>
+            )
+          }
+        </div>
+
+        {
+          videos.length > 0 ? (
+            <div class="divide-y divide-primary/10">
+              {videos.map((video, index) => (
+                <TreatmentVideo video={video} index={index} />
+              ))}
+            </div>
+          ) : (
+            <div
+              data-reveal="up"
+              class="mt-14 flex flex-col items-center rounded-3xl border border-dashed border-primary/20 bg-white/50 px-6 py-20 text-center"
+            >
+              <span class="flex h-16 w-16 items-center justify-center rounded-full bg-accent/15 text-accent-dark">
+                <svg viewBox="0 0 24 24" class="h-6 w-6 translate-x-0.5 fill-current" aria-hidden="true">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </span>
+              <h3 class="mt-6 font-serif text-2xl font-semibold text-primary">
+                Conteúdos em produção
+              </h3>
+              <p class="mt-3 max-w-md text-base leading-relaxed text-primary/65">
+                Em breve, vídeos do Dr. André sobre {title.toLowerCase()}. Enquanto
+                isso, tire suas dúvidas diretamente pelo WhatsApp.
+              </p>
+              <a
+                href={ctaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-8 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-cream transition-colors hover:bg-primary-light"
+              >
+                Tirar dúvidas no WhatsApp
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </section>
+
+    {
+      videos.length > 0 && (
+        <section class="mx-auto max-w-7xl bg-cream px-6 pb-24 lg:px-12 lg:pb-32">
+          <div
+            data-reveal="up"
+            class="relative overflow-hidden rounded-3xl bg-primary px-8 py-14 sm:px-14 lg:flex lg:items-center lg:justify-between lg:gap-12 lg:py-16"
+          >
+            <div
+              aria-hidden="true"
+              class="pointer-events-none absolute inset-0"
+              style="background: radial-gradient(circle min(420px, 70vw) at 90% 0%, rgba(200,173,132,0.18), transparent 70%);"
+            />
+            <div class="relative max-w-2xl">
+              <p class="mb-4 text-sm font-semibold tracking-[0.25em] text-accent uppercase">
+                Próximo passo
+              </p>
+              <h2 class="text-balance font-serif text-3xl font-semibold text-cream sm:text-4xl">
+                Cada dor tem uma causa — e um tratamento certo para ela.
+              </h2>
+              <p class="mt-4 text-base leading-relaxed text-cream/70">
+                Agende uma avaliação com o Dr. André e receba um diagnóstico
+                preciso para o seu caso.
+              </p>
+            </div>
+            <a
+              href={ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="relative mt-8 inline-flex shrink-0 rounded-full bg-accent px-8 py-4 text-sm font-semibold tracking-wide text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light lg:mt-0"
+            >
+              Agendar avaliação
+            </a>
+          </div>
+        </section>
+      )
+    }
+
+    <section class="border-t border-primary/10 bg-cream py-20 lg:py-24">
+      <div class="mx-auto max-w-7xl px-6 lg:px-12">
+        <div data-reveal="up" class="flex items-end justify-between gap-6">
+          <div>
+            <p class="mb-4 text-sm font-semibold tracking-[0.25em] text-accent-dark uppercase">
+              Outros tratamentos
+            </p>
+            <h2 class="font-serif text-2xl font-semibold text-primary sm:text-3xl">
+              Explore outros temas
+            </h2>
+          </div>
+          <a
+            href="/#tratamentos"
+            class="hidden shrink-0 text-sm font-semibold text-accent-dark transition-colors hover:text-primary sm:inline-flex"
+          >
+            Ver todos →
+          </a>
+        </div>
+
+        <ul data-reveal="up" class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {
+            others.map((other) => {
+              const OtherIcon = other.icon;
+              return (
+                <li>
+                  <a
+                    href={treatmentHref(other.slug)}
+                    class="group flex h-full flex-col justify-between gap-8 rounded-2xl border border-primary/10 bg-white/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:bg-white hover:shadow-lg hover:shadow-primary/10"
+                  >
+                    <span class="flex h-11 w-11 items-center justify-center rounded-full bg-primary/5 text-primary transition-colors group-hover:bg-accent/15 group-hover:text-accent-dark">
+                      <OtherIcon className="h-5 w-5" strokeWidth={1.75} />
+                    </span>
+                    <span class="flex items-end justify-between gap-3">
+                      <span class="font-serif text-lg leading-snug font-semibold text-primary">
+                        {other.title}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        class="text-accent-dark transition-transform group-hover:translate-x-1"
+                      >
+                        →
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+  <WhatsAppButton client:load />
+</Layout>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to("[data-reveal='hero']", {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    ease: "power3.out",
+    stagger: 0.12,
+    delay: 0.15,
+  });
+
+  gsap.utils.toArray<HTMLElement>("[data-reveal='up']").forEach((el) => {
+    gsap.to(el, {
+      opacity: 1,
+      y: 0,
+      duration: 0.9,
+      ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 85%" },
+    });
+  });
+</script>
