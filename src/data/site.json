@@ -26,9 +26,18 @@
       "alt": "Dr. André Felipe Moura, ortopedista e traumatologista"
     },
     "stats": [
-      { "value": "10+", "label": "anos de prática" },
-      { "value": "100%", "label": "atendimento humanizado" },
-      { "value": "Cuiabá", "label": "referência regional" }
+      {
+        "value": "10+",
+        "label": "anos de prática"
+      },
+      {
+        "value": "100%",
+        "label": "atendimento humanizado"
+      },
+      {
+        "value": "Cuiabá",
+        "label": "referência regional"
+      }
     ]
   },
   "clinic": {
@@ -36,8 +45,14 @@
     "title": "Estrutura pensada para o seu bem-estar, do início ao fim.",
     "text": "Ambientes silenciosos e privativos reúnem, em um só lugar, toda a estrutura para consulta, diagnóstico por imagem e procedimentos de medicina regenerativa — para que cada etapa do seu tratamento aconteça com o mesmo cuidado.",
     "photos": [
-      { "src": "/images/clinicadrandre1.jpg", "alt": "Sala de procedimentos da clínica" },
-      { "src": "/images/clinicadrandre2.jpg", "alt": "Outro ângulo da sala de procedimentos" }
+      {
+        "src": "/images/clinicadrandre1.jpg",
+        "alt": "Sala de procedimentos da clínica"
+      },
+      {
+        "src": "/images/clinicadrandre2.jpg",
+        "alt": "Outro ângulo da sala de procedimentos"
+      }
     ]
   },
   "videos": {
@@ -45,9 +60,18 @@
     "title": "Conteúdo em vídeo, direto ao ponto",
     "text": "Explicações curtas do Dr. André sobre dor, diagnóstico e tratamento — para entender antes mesmo da consulta.",
     "items": [
-      { "title": "Dor no joelho durante o treino", "youtubeId": "H857GbsiHVA" },
-      { "title": "O poder da medicina regenerativa", "youtubeId": "OgjC55HUY10" },
-      { "title": "Medicina regenerativa pode substituir a cirurgia?", "youtubeId": "wGq1r1rEicg" }
+      {
+        "title": "Dor no joelho durante o treino",
+        "youtubeId": "H857GbsiHVA"
+      },
+      {
+        "title": "O poder da medicina regenerativa",
+        "youtubeId": "OgjC55HUY10"
+      },
+      {
+        "title": "Medicina regenerativa pode substituir a cirurgia?",
+        "youtubeId": "wGq1r1rEicg"
+      }
     ]
   },
   "treatments": {

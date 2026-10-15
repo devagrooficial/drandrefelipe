@@ -1,0 +1,115 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import {
+  authConfigError,
+  checkCredentials,
+  clearFailedLogins,
+  hasValidSession,
+  isRateLimited,
+  recordFailedLogin,
+  startSession,
+} from "../../lib/admin/auth";
+
+export const prerender = false;
+
+Astro.response.headers.set("Cache-Control", "no-store");
+Astro.response.headers.set("X-Robots-Tag", "noindex, nofollow");
+
+const configError = authConfigError();
+if (!configError && hasValidSession(Astro.cookies)) return Astro.redirect("/admin");
+
+let error = "";
+let user = "";
+
+if (Astro.request.method === "POST" && !configError) {
+  const ip = Astro.clientAddress;
+  if (isRateLimited(ip)) {
+    error = "Muitas tentativas seguidas. Aguarde 15 minutos e tente novamente.";
+    Astro.response.status = 429;
+  } else {
+    const form = await Astro.request.formData();
+    user = String(form.get("user") ?? "").trim();
+    const password = String(form.get("password") ?? "");
+
+    if (checkCredentials(user, password)) {
+      clearFailedLogins(ip);
+      startSession(Astro.cookies);
+      return Astro.redirect("/admin", 303);
+    }
+
+    recordFailedLogin(ip);
+    // Slows down guessing; the response is identical for a wrong user or a wrong password.
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    error = "Usuário ou senha incorretos.";
+    Astro.response.status = 401;
+  }
+}
+---
+
+<AdminLayout title="Entrar">
+  <main class="relative flex min-h-screen items-center justify-center overflow-hidden bg-primary px-6 py-16">
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style="background: radial-gradient(circle min(520px, 90vw) at 80% 10%, rgba(200,173,132,0.16), transparent 70%);"
+    >
+    </div>
+
+    <div class="relative w-full max-w-sm">
+      <img src="/images/logo-reversed.png" alt="Dr. André Felipe Moura" class="mx-auto h-20 w-auto" />
+
+      <div class="mt-10 rounded-3xl bg-cream p-8 shadow-2xl shadow-black/30">
+        <h1 class="font-serif text-2xl font-semibold text-primary">Painel do site</h1>
+        <p class="mt-1 text-sm text-primary/60">Entre para editar textos e imagens.</p>
+
+        {
+          configError ? (
+            <p class="mt-6 rounded-xl bg-red-50 p-4 text-sm text-red-800 ring-1 ring-red-200">
+              {configError} Configure-as nas variáveis de ambiente da Vercel e faça um novo deploy.
+            </p>
+          ) : (
+            <form method="post" class="mt-6 space-y-4">
+              {error && (
+                <p role="alert" class="rounded-xl bg-red-50 p-3 text-sm text-red-800 ring-1 ring-red-200">
+                  {error}
+                </p>
+              )}
+              <label class="block">
+                <span class="text-xs font-semibold tracking-wide text-primary/70 uppercase">Usuário</span>
+                <input
+                  name="user"
+                  value={user}
+                  required
+                  autocomplete="username"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  class="mt-1.5 block w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/30"
+                />
+              </label>
+              <label class="block">
+                <span class="text-xs font-semibold tracking-wide text-primary/70 uppercase">Senha</span>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  autocomplete="current-password"
+                  class="mt-1.5 block w-full rounded-xl border border-primary/15 bg-white px-4 py-3 text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/30"
+                />
+              </label>
+              <button
+                type="submit"
+                class="w-full rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-primary-light"
+              >
+                Entrar
+              </button>
+            </form>
+          )
+        }
+      </div>
+
+      <p class="mt-6 text-center text-xs text-cream/40">
+        <a href="/" class="transition-colors hover:text-accent">← Voltar ao site</a>
+      </p>
+    </div>
+  </main>
+</AdminLayout>

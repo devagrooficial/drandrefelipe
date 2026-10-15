@@ -1,6 +1,6 @@
 import { motion, type Variants } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import type { TreatmentSlug } from "../../lib/content";
+import type { TreatmentSlug } from "../../lib/contentSchema";
 import { TREATMENT_ICONS, treatmentHref } from "../../lib/treatmentMeta";
 
 interface Item {

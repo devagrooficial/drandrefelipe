@@ -7,7 +7,7 @@ import {
   ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
-import type { TreatmentSlug } from "./content";
+import type { TreatmentSlug } from "./contentSchema";
 
 // Kept free of site.json so hydrated islands can import it without bundling all site content.
 export const TREATMENT_ICONS: Record<TreatmentSlug, LucideIcon> = {

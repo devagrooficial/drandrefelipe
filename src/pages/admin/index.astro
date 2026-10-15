@@ -1,0 +1,43 @@
+---
+import AdminLayout from "../../layouts/AdminLayout.astro";
+import AdminApp from "../../components/admin/AdminApp.tsx";
+import { hasValidSession } from "../../lib/admin/auth";
+import { readSite, storageMode } from "../../lib/admin/storage";
+import type { SiteContent } from "../../lib/contentSchema";
+
+export const prerender = false;
+
+Astro.response.headers.set("Cache-Control", "no-store");
+Astro.response.headers.set("X-Robots-Tag", "noindex, nofollow");
+
+if (!hasValidSession(Astro.cookies)) return Astro.redirect("/admin/login");
+
+// Read the latest saved version (not this deploy's build-time copy), so a
+// save made seconds ago shows up even before the redeploy finishes.
+let content: SiteContent | null = null;
+try {
+  content = await readSite();
+} catch (error) {
+  console.error("[admin] could not load content", error);
+}
+---
+
+<AdminLayout title="Editar site">
+  {
+    content ? (
+      <AdminApp client:load initialContent={content} mode={storageMode()} />
+    ) : (
+      <main class="flex min-h-screen items-center justify-center bg-primary px-6">
+        <div class="max-w-md rounded-3xl bg-cream p-8 text-center">
+          <h1 class="font-serif text-2xl font-semibold text-primary">Não foi possível carregar o conteúdo</h1>
+          <p class="mt-3 text-sm text-primary/70">
+            Verifique se o GITHUB_TOKEN na Vercel tem acesso ao repositório e tente novamente.
+          </p>
+          <a href="/admin" class="mt-6 inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-cream">
+            Tentar de novo
+          </a>
+        </div>
+      </main>
+    )
+  }
+</AdminLayout>
