@@ -1,5 +1,11 @@
 ---
-import { DOCTOR_NAME, NAV_LINKS, WHATSAPP_URL } from "../../lib/contact";
+import {
+  DOCTOR_NAME,
+  FULL_ADDRESS,
+  NAV_LINKS,
+  WHATSAPP_DISPLAY,
+  WHATSAPP_URL,
+} from "../../lib/contact";
 import { treatments, treatmentHref } from "../../lib/treatments";
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "");
@@ -12,7 +18,7 @@ const onTreatmentPage = currentPath.startsWith("/tratamentos/");
   class="fixed inset-x-0 top-0 z-50 transition-colors duration-300"
 >
   <div
-    class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-12"
+    class="relative z-10 mx-auto flex max-w-7xl items-center justify-between gap-3 px-6 py-5 lg:px-12"
   >
     <a href="/#top" class="brand shrink-0" aria-label={DOCTOR_NAME}>
       <img
@@ -114,40 +120,222 @@ const onTreatmentPage = currentPath.startsWith("/tratamentos/");
       }
     </nav>
 
-    <a
-      href={WHATSAPP_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="shrink-0 rounded-full bg-accent px-4 py-2 text-xs font-semibold whitespace-nowrap text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light sm:px-5 sm:py-2.5 sm:text-sm"
+    <div class="flex shrink-0 items-center gap-3">
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="shrink-0 rounded-full bg-accent px-4 py-2 text-xs font-semibold whitespace-nowrap text-primary-dark transition-transform hover:scale-105 hover:bg-accent-light sm:px-5 sm:py-2.5 sm:text-sm"
+      >
+        Agendar avaliação
+      </a>
+
+      <button
+        type="button"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Abrir menu"
+        class="menu-toggle relative -mr-2 flex h-10 w-10 items-center justify-center md:hidden"
+      >
+        <span class="menu-line menu-line-top"></span>
+        <span class="menu-line menu-line-bottom"></span>
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="mobile-menu"
+    data-mobile-menu
+    inert
+    class="mobile-menu fixed inset-0 z-0 overflow-y-auto bg-primary md:hidden"
+  >
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0"
+      style="background: radial-gradient(circle min(420px, 90vw) at 100% 0%, rgba(200,173,132,0.14), transparent 70%);"
     >
-      Agendar avaliação
-    </a>
+    </div>
+
+    <nav aria-label="Menu" class="relative flex min-h-full flex-col px-6 pt-32 pb-10">
+      <ul class="flex flex-col">
+        {
+          NAV_LINKS.map((link, index) => (
+            <li class="mm-item border-b border-cream/10" style={`--mm-delay: ${80 + index * 45}ms`}>
+              {link.treatmentsMenu ? (
+                <>
+                  <button
+                    type="button"
+                    data-mm-accordion
+                    aria-expanded={onTreatmentPage ? "true" : "false"}
+                    aria-controls="mm-treatments"
+                    class:list={[
+                      "flex w-full items-center justify-between py-4 text-left font-serif text-2xl font-semibold",
+                      onTreatmentPage ? "text-accent" : "text-cream",
+                    ]}
+                  >
+                    {link.label}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="mm-chevron h-5 w-5 text-accent"
+                      aria-hidden="true"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </button>
+                  <div id="mm-treatments" class="mm-accordion-panel">
+                    <div class="overflow-hidden">
+                      <ul class="grid gap-1 pb-4">
+                        {treatments.map((treatment) => {
+                          const Icon = treatment.icon;
+                          const href = treatmentHref(treatment.slug);
+                          const active = currentPath === href;
+                          return (
+                            <li>
+                              <a
+                                href={href}
+                                aria-current={active ? "page" : undefined}
+                                class:list={[
+                                  "flex items-center gap-4 rounded-xl px-3 py-3 transition-colors active:bg-cream/10",
+                                  active ? "bg-cream/10 text-accent" : "text-cream/85",
+                                ]}
+                              >
+                                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+                                  <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                                </span>
+                                <span class="text-base">{treatment.title}</span>
+                              </a>
+                            </li>
+                          );
+                        })}
+                        <li>
+                          <a
+                            href={link.href}
+                            class="mt-1 inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-accent"
+                          >
+                            Ver todos os tratamentos <span aria-hidden="true">→</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <a
+                  href={link.href}
+                  class="block py-4 font-serif text-2xl font-semibold text-cream transition-colors active:text-accent"
+                >
+                  {link.label}
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mm-item mt-auto pt-10" style={`--mm-delay: ${80 + NAV_LINKS.length * 45}ms`}>
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex w-full items-center justify-center rounded-full bg-accent px-8 py-4 text-sm font-semibold tracking-wide text-primary-dark"
+        >
+          Agendar avaliação
+        </a>
+        <p class="mt-6 text-center text-xs leading-relaxed text-cream/50">
+          {WHATSAPP_DISPLAY}<br />{FULL_ADDRESS}
+        </p>
+      </div>
+    </nav>
   </div>
 </header>
 
 <script>
   const header = document.querySelector<HTMLElement>("[data-header]");
   const logo = document.querySelector<HTMLImageElement>("[data-logo]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = document.querySelector<HTMLElement>("[data-mobile-menu]");
+
+  const LOGO_LIGHT_BG = "/images/logo-transparent.png";
+  const LOGO_DARK_BG = "/images/logo-reversed.png";
 
   // Warm the cache for the swapped-in variant so the scroll transition never pops in late.
-  new Image().src = "/images/logo-transparent.png";
+  new Image().src = LOGO_LIGHT_BG;
 
-  if (header) {
-    const updateHeaderState = () => {
-      const scrolled = window.scrollY > 40;
-      header.classList.toggle("is-scrolled", scrolled);
-      if (logo) {
-        const nextSrc = scrolled ? "/images/logo-transparent.png" : "/images/logo-reversed.png";
-        if (!logo.src.endsWith(nextSrc)) logo.src = nextSrc;
-      }
+  const setLogo = (src: string) => {
+    if (logo && !logo.src.endsWith(src)) logo.src = src;
+  };
+
+  const menuOpen = () => header?.classList.contains("menu-open") ?? false;
+
+  const updateHeaderState = () => {
+    if (!header || menuOpen()) return;
+    const scrolled = window.scrollY > 40;
+    header.classList.toggle("is-scrolled", scrolled);
+    setLogo(scrolled ? LOGO_LIGHT_BG : LOGO_DARK_BG);
+  };
+
+  updateHeaderState();
+  window.addEventListener("scroll", updateHeaderState, { passive: true });
+
+  const setMenu = (open: boolean) => {
+    if (!header || !toggle || !menu) return;
+    header.classList.toggle("menu-open", open);
+    menu.classList.toggle("is-open", open);
+    menu.inert = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+    document.documentElement.classList.toggle("overflow-hidden", open);
+    for (const element of document.body.children) {
+      if (element !== header) (element as HTMLElement).inert = open;
+    }
+
+    if (open) {
+      setLogo(LOGO_DARK_BG);
+      menu.querySelector<HTMLElement>("a, button")?.focus({ preventScroll: true });
+    } else {
+      updateHeaderState();
+    }
+  };
+
+  toggle?.addEventListener("click", () => setMenu(!menuOpen()));
+
+  menu?.addEventListener("click", (event) => {
+    // Same-page anchors (/#sobre) don't reload, so the menu has to close itself.
+    if ((event.target as Element).closest("a")) setMenu(false);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && menuOpen()) {
+      setMenu(false);
+      toggle?.focus();
+    }
+  });
+
+  window.matchMedia("(min-width: 768px)").addEventListener("change", (event) => {
+    if (event.matches && menuOpen()) setMenu(false);
+  });
+
+  document.querySelectorAll<HTMLButtonElement>("[data-mm-accordion]").forEach((button) => {
+    const panel = document.getElementById(button.getAttribute("aria-controls") ?? "");
+    const syncPanel = () => {
+      if (panel) panel.inert = button.getAttribute("aria-expanded") !== "true";
     };
+    syncPanel();
+    button.addEventListener("click", () => {
+      const expanded = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!expanded));
+      syncPanel();
+    });
+  });
 
-    updateHeaderState();
-    window.addEventListener("scroll", updateHeaderState, { passive: true });
-  }
-
-  // The panel opens on :hover, so after a click (e.g. the same-page jump to
-  // #tratamentos) it would stay open under the still-hovering cursor.
+  // The desktop panel opens on :hover, so after a click (e.g. the same-page
+  // jump to #tratamentos) it would stay open under the still-hovering cursor.
   document.querySelectorAll<HTMLElement>("[data-nav-dropdown]").forEach((dropdown) => {
     dropdown.addEventListener("click", (event) => {
       if ((event.target as Element).closest("a")) dropdown.classList.add("is-dismissed");
@@ -171,15 +359,26 @@ const onTreatmentPage = currentPath.startsWith("/tratamentos/");
     box-shadow: 0 1px 0 0 rgb(26 40 37 / 0.08);
   }
 
+  [data-header].menu-open {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
   .brand,
-  .nav-link {
+  .nav-link,
+  .menu-toggle {
     color: var(--color-cream);
     transition: color 0.3s ease;
   }
 
   .is-scrolled .brand,
-  .is-scrolled .nav-link {
+  .is-scrolled .nav-link,
+  .is-scrolled .menu-toggle {
     color: var(--color-primary);
+  }
+
+  .menu-open .menu-toggle {
+    color: var(--color-cream);
   }
 
   .nav-link:hover,
@@ -222,5 +421,97 @@ const onTreatmentPage = currentPath.startsWith("/tratamentos/");
   .nav-dropdown.is-dismissed .nav-dropdown-panel {
     visibility: hidden;
     opacity: 0;
+  }
+
+  /* Hamburger: two lines that cross into an X when open. */
+  .menu-line {
+    position: absolute;
+    left: 50%;
+    width: 22px;
+    height: 1.5px;
+    border-radius: 999px;
+    background-color: currentColor;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .menu-line-top {
+    transform: translate(-50%, -4px);
+  }
+
+  .menu-line-bottom {
+    transform: translate(-50%, 4px);
+  }
+
+  .menu-open .menu-line-top {
+    transform: translate(-50%, 0) rotate(45deg);
+  }
+
+  .menu-open .menu-line-bottom {
+    transform: translate(-50%, 0) rotate(-45deg);
+  }
+
+  /* Above the floating WhatsApp button (also z-50, later in the DOM). */
+  [data-header].menu-open {
+    z-index: 60;
+  }
+
+  /* visibility flips instantly on open (so focus() can land inside right
+     away) but waits for the fade-out before hiding on close. */
+  .mobile-menu {
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+
+  .mobile-menu.is-open {
+    visibility: visible;
+    opacity: 1;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s;
+  }
+
+  .mm-item {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .mobile-menu.is-open .mm-item {
+    opacity: 1;
+    transform: none;
+    transition-delay: var(--mm-delay);
+  }
+
+  /* Animates height without measuring it in JS. */
+  .mm-accordion-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+
+  [aria-expanded="true"] + .mm-accordion-panel {
+    grid-template-rows: 1fr;
+  }
+
+  .mm-chevron {
+    transition: transform 0.3s ease;
+  }
+
+  [aria-expanded="true"] .mm-chevron {
+    transform: rotate(180deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu,
+    .mm-item,
+    .mm-accordion-panel,
+    .menu-line {
+      transition: none;
+    }
   }
 </style>
