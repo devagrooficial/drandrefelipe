@@ -1,4 +1,4 @@
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, scryptSync, timingSafeEqual } from "node:crypto";
 import type { AstroCookies } from "astro";
 import { ADMIN_PASSWORD, ADMIN_USER, SESSION_SECRET } from "astro:env/server";
 
@@ -6,15 +6,22 @@ export const SESSION_COOKIE = "admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
 
 export function authConfigError(): string | null {
-  const missing = [
-    !ADMIN_USER && "ADMIN_USER",
-    !ADMIN_PASSWORD && "ADMIN_PASSWORD",
-    !SESSION_SECRET && "SESSION_SECRET",
-  ].filter(Boolean);
+  const missing = [!ADMIN_USER && "ADMIN_USER", !ADMIN_PASSWORD && "ADMIN_PASSWORD"].filter(Boolean);
   if (missing.length) return `Variáveis de ambiente ausentes: ${missing.join(", ")}.`;
-  if (SESSION_SECRET!.length < 32) return "SESSION_SECRET precisa ter pelo menos 32 caracteres.";
+  if (SESSION_SECRET && SESSION_SECRET.length < 32) {
+    return "SESSION_SECRET é opcional, mas se usada precisa ter pelo menos 32 caracteres.";
+  }
   return null;
 }
+
+let derivedKey: Buffer | undefined;
+
+// Without SESSION_SECRET, the key comes from the credentials via scrypt (slow on
+// purpose, so a leaked cookie can't be cheaply brute-forced back to the password).
+// Side effect: changing the password signs out every open session.
+const signingKey = () =>
+  SESSION_SECRET ||
+  (derivedKey ??= scryptSync(ADMIN_PASSWORD!, `drandrefelipe-admin-session:${ADMIN_USER}`, 32));
 
 // Hashing first gives equal-length buffers, so timingSafeEqual never leaks the secret's length.
 const sameSecret = (input: string, expected: string) =>
@@ -32,7 +39,7 @@ export function checkCredentials(user: string, password: string): boolean {
 }
 
 const sign = (payload: string) =>
-  createHmac("sha256", SESSION_SECRET!).update(payload).digest("base64url");
+  createHmac("sha256", signingKey()).update(payload).digest("base64url");
 
 export function startSession(cookies: AstroCookies) {
   const payload = Buffer.from(
